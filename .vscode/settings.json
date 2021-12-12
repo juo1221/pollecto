@@ -3,7 +3,7 @@
     {
       "format": "expanded",
       "extensionName": ".css",
-      "savePath": "/dist/css" // 컴파일된 css 파일이 저장될 경로
+      "savePath": "/style/css" // 컴파일된 css 파일이 저장될 경로
     }
   ]
 }
