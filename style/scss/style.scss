@@ -1,13 +1,13 @@
 @import "_reset.scss";
 
 //color
-$color-headerr: #d3d7e8;
-$color-mainr: #f3f2f6;
-$color-iconr: #ffe08f;
-$color-dialogr: #7a83c1;
-$color-fileLoaderr: #dfe1fb;
-$color-whiter: #ffffff;
-$color-blackr: #002;
+$color-header: #d3d7e8;
+$color-main: #f3f2f6;
+$color-icon: #ffe08f;
+$color-dialog: #7a83c1;
+$color-fileLoader: #dfe1fb;
+$color-white: #ffffff;
+$color-black: #002;
 $color-page-liner: #7a83c1;
 $color-center-liner: #59638a;
 
@@ -25,9 +25,9 @@ $height-space: 8px;
 $width-space: 12px;
 
 //font-size
+$font-title: 30px;
 $font-setting: 100px;
 $font-option: 100px;
-$font-title: 180px;
 
 //font-weight
 $weight-bold: 700;
@@ -35,7 +35,64 @@ $weight-semi-bold: 600;
 $weight-regular: 400;
 
 //border-radius
-$border-radius: 5px;
+$border-radius: 50%;
 
 //animation duration
 $animation-duration: 300ms;
+
+body {
+  background-color: $color-main;
+}
+.header {
+  @import url("https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap");
+  background-color: $color-header;
+  height: 92px;
+  box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  text-align: center;
+  &-title {
+    margin-left: $width-space;
+    font-family: Rubik Mono One;
+    font-weight: $weight-regular;
+    font-size: $font-title;
+    line-height: 37px;
+  }
+}
+.buttons {
+  position: relative;
+  .btn {
+    width: $width-icon;
+    height: $height-icon;
+    background: $color-white;
+    border: 5px solid $color-icon;
+    border-radius: $border-radius;
+    margin-left: $width-space;
+    margin-top: $height-space * 3;
+    cursor: pointer;
+
+    &:nth-last-child(1) {
+      position: absolute;
+      right: 0;
+      margin-right: $width-space;
+    }
+  }
+}
+.main {
+  display: flex;
+  justify-content: center;
+  .page-container {
+    display: flex;
+    margin-top: $height-space * 5;
+    width: 95%;
+    height: 75vh;
+    border: 1px solid $color-black;
+    .page-left {
+      width: 50%;
+      height: 100%;
+      border-right: 1px dashed $color-black;
+    }
+    .page-right {
+    }
+  }
+}

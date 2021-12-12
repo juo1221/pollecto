@@ -10,5 +10,3 @@ if (module.hot) {
   //   resultEl.innerHTML = await result.render();
   // });
 }
-
-console.log("hihihihihihi");

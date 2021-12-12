@@ -6,6 +6,9 @@
 *::after {
   box-sizing: border-box;
 }
+.fas {
+  pointer-events: none;
+}
 /*
     2. Remove default margin
   */

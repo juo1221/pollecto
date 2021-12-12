@@ -4,10 +4,27 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/29601563c1.js"
+      crossorigin="anonymous"
+    ></script>
     <title>pollecto<%= env%></title>
   </head>
   <body>
-    <header class="header"></header>
-    <main class="main"></main>
+    <header class="header">
+      <h1 class="header-title">pollecto</h1>
+    </header>
+    <div class="buttons">
+      <button class="btn btn-zoom"><i class="fas fa-search-plus"></i></button>
+      <button class="btn btn-move"><i class="fas fa-arrows-alt"></i></button>
+      <button class="btn btn-size"><i class="fas fa-expand-alt"></i></button>
+      <button class="btn btn-bar"><i class="fas fa-bars"></i></button>
+    </div>
+    <main class="main">
+      <div class="page-container">
+        <div class="page-left"></div>
+        <div class="page-right"></div>
+      </div>
+    </main>
   </body>
 </html>
