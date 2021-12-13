@@ -10,14 +10,14 @@ const el = <T extends keyof HTMLElementTagNameMap>(v: T) => document.createEleme
 interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
 }
-if (module.hot) {
-  console.log('핫모듈!');
-  // module.hot.accept("./result", async () => {
-  //   // 감지하고자 하는 모듈을 첫번째 인자로 등록
-  //   console.log("result 모듈 변경됨");
-  //   resultEl.innerHTML = await result.render();
-  // });
-}
+// if (module.hot) {
+//   console.log('핫모듈!');
+//   // module.hot.accept("./result", async () => {
+//   //   // 감지하고자 하는 모듈을 첫번째 인자로 등록
+//   //   console.log("result 모듈 변경됨");
+//   //   resultEl.innerHTML = await result.render();
+//   // });
+// }
 
 const BaseComponent = class<T extends HTMLElement> implements Component {
   protected readonly el: T;
@@ -29,9 +29,9 @@ const BaseComponent = class<T extends HTMLElement> implements Component {
   attachTo(parent: HTMLElement, position: InsertPosition = 'beforeend') {
     parent.insertAdjacentElement(position, this.el);
   }
-  removeFrom(parent: HTMLElement) {
-    parent.removeChild(this.el);
-  }
+  // removeFrom(parent: HTMLElement) {
+  //   parent.removeChild(this.el);
+  // }
 };
 
 const PageComponent = class extends BaseComponent<HTMLElement> {
@@ -104,7 +104,6 @@ const DialogComponent = class extends BaseComponent<HTMLElement> {
     </aside>
 `);
   }
-
   add() {
     document.body.classList.toggle('dialog--active');
   }
@@ -112,6 +111,44 @@ const DialogComponent = class extends BaseComponent<HTMLElement> {
     document.body.classList.toggle('dialog--active');
   }
 };
+type stateParams = {
+  currentPage?: number;
+  totalImg?: number;
+  imgPerPage?: number;
+};
+class Pagination {
+  private static base = new Pagination(1, 0, 6);
+  static new({ totalImg, imgPerPage }: stateParams = {}) {
+    const {
+      currentPage: baseCurrent,
+      totalImg: baseTotalImg,
+      imgPerPage: baseImgPerPage,
+    } = Pagination.base;
+    return new Pagination(
+      baseCurrent,
+      totalImg !== undefined ? totalImg : baseTotalImg,
+      imgPerPage !== undefined ? imgPerPage : baseImgPerPage,
+    );
+  }
+  private constructor(
+    private currentPage: number,
+    private totalImg: number,
+    private imgPerPage: number,
+  ) {}
+
+  setState(newState: stateParams) {
+    this.currentPage = newState.currentPage ? newState.currentPage : this.currentPage;
+  }
+  getState(): stateParams {
+    return { currentPage: this.currentPage, totalImg: this.totalImg, imgPerPage: this.imgPerPage };
+  }
+}
+// test 1
+// const page = Pagination.new({ totalImg: 50, imgPerPage: 10 });
+// console.log(page);
+// page.setState({ currentPage: 10 });
+// console.log(page);
+
 const Renderer = class {
   constructor() {}
   render() {

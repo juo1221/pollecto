@@ -192,6 +192,7 @@ body {
       .select-option {
         input[type='text'] {
           text-align: center;
+          border: none;
           border-radius: $border-radius;
           background-color: $color-white;
         }

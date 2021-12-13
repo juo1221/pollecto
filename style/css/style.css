@@ -395,6 +395,7 @@ body {
 
 .dialog .container .dialog-options .select-option input[type='text'] {
   text-align: center;
+  border: none;
   border-radius: 5px;
   background-color: #ffffff;
 }
