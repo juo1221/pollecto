@@ -106,13 +106,13 @@ body {
 }
 .dialog {
   position: absolute;
-  right: 0;
+  width: 30%;
   height: 90%;
   top: 92px;
-  width: 30%;
-  min-width: 650px;
+  right: -30%;
   background-color: $color-dialog;
   border-radius: 20px 0px 0px 20px;
+  transition: all 500ms ease-in-out;
   .dialog-top {
     display: flex;
     margin: $height-space $width-space;
@@ -214,5 +214,13 @@ body {
         color: $color-white;
       }
     }
+  }
+}
+
+.dialog--active {
+}
+@media screen and (min-width: 1024px) {
+  .dialog--active .dialog {
+    transform: translateX(-100%);
   }
 }

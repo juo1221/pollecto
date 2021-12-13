@@ -257,13 +257,14 @@ body {
 
 .dialog {
   position: absolute;
-  right: 0;
+  width: 30%;
   height: 90%;
   top: 92px;
-  width: 30%;
-  min-width: 650px;
+  right: -30%;
   background-color: #7a83c1;
   border-radius: 20px 0px 0px 20px;
+  -webkit-transition: all 500ms ease-in-out;
+  transition: all 500ms ease-in-out;
 }
 
 .dialog .dialog-top {
@@ -427,5 +428,12 @@ body {
   font-size: 50px;
   cursor: pointer;
   color: #ffffff;
+}
+
+@media screen and (min-width: 1024px) {
+  .dialog--active .dialog {
+    -webkit-transform: translateX(-100%);
+            transform: translateX(-100%);
+  }
 }
 /*# sourceMappingURL=style.css.map */
