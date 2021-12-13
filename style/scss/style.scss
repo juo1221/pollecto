@@ -149,22 +149,44 @@ body {
     .dialog-fileloader {
       display: flex;
       flex-direction: column;
+      input::-webkit-file-upload-button {
+        display: none;
+      }
+      .upload-hidden {
+        position: absolute;
+        clip: rect(0, 0, 0, 0);
+      }
       .fileloader-buttons {
         display: flex;
         justify-content: space-between;
         background-color: $color-fileLoader;
         border-radius: $border-radius;
         .btn-image,
-        .btn-remove {
+        .btn-removeAll {
           @include customBtn(1, 1, 0, 0, 2);
         }
+        .btn-image {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
-      .contents {
+      .urlLists {
         overflow: auto;
         background-color: $color-white;
         margin-top: $height-space;
         border-radius: $border-radius;
         height: 500px;
+        font-size: $font-title / 1.5;
+        .btn-remove {
+          cursor: pointer;
+        }
+      }
+      .list {
+        display: flex;
+        justify-content: space-between;
+        margin: $width-space * 2;
+        padding: $width-space;
       }
     }
     .dialog-options {
@@ -189,19 +211,21 @@ body {
         padding: 0 $width-space;
         font-weight: $weight-semi-bold;
       }
-      .select-option {
-        input[type='text'] {
-          text-align: center;
-          border: none;
-          border-radius: $border-radius;
-          background-color: $color-white;
-        }
+      .imgPerCnt {
+        text-align: center;
+        border: none;
+        border-radius: $border-radius;
+        background-color: $color-white;
       }
+
       .sort-btns,
       .line-btns {
         display: flex;
         justify-content: space-between;
         color: white;
+        .btn {
+          cursor: pointer;
+        }
       }
       .line-btns {
         justify-content: space-around;

@@ -10,6 +10,11 @@ const el = <T extends keyof HTMLElementTagNameMap>(v: T) => document.createEleme
 interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
 }
+
+type Infos = {
+  urlArr: string[];
+  imgPerPage: number;
+};
 // if (module.hot) {
 //   console.log('핫모듈!');
 //   // module.hot.accept("./result", async () => {
@@ -53,6 +58,11 @@ const PageRightComponent = class extends BaseComponent<HTMLElement> {
   }
 };
 const DialogComponent = class extends BaseComponent<HTMLElement> {
+  private urlArr: string[] = [];
+  private imgPerPage: number = 6;
+  // private sort: string = 'C';
+  // private line: string = 'On';
+
   constructor() {
     super(`
     <aside class="dialog">
@@ -66,35 +76,34 @@ const DialogComponent = class extends BaseComponent<HTMLElement> {
       <div class="container">
         <div class="dialog-fileloader">
           <div class="fileloader-buttons">
-            <button class="btn btn-image"><i class="far fa-images"></i></button>
+            <label for="img-upload" class="btn btn-image" ><i class="far fa-images"></i></label>
             <button class="btn btn-remove btn-removeAll"><i class="far fa-trash-alt"></i></button>
           </div>
-          <div class="contents"></div>
+          <input type="file" id="img-upload" class="upload-hidden" multiple ></input>
+          <ul class="urlLists"></ul>
         </div>
         <div class="dialog-options">
           <h1 class="option-title">OPTIONS</h1>
           <p>Img / Page</p>
-          <div class="select-option">
-            <input type="text" list="imgCnt" placeholder="6" />
-            <datalist id="imgCnt">
-              <option value="1">Max: 15장</option>
-              <option value="2">Max: 30장</option>
-              <option value="3">Max: 45장</option>
-              <option value="4">Max: 60장</option>
-              <option value="5">Max: 75장</option>
-              <option value="6">Max: 90장</option>
-            </datalist>
-          </div>
+          <select class="imgPerCnt">
+            <option>6</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+  
           <p>Sort</p>
           <div class="sort-btns">
-            <span class="left">L</span>
-            <span class="center">C</span>
-            <span class="right">R</span>
+            <span class="btn btn-left">L</span>
+            <span class="btn btn-center">C</span>
+            <span class="btn btn-right">R</span>
           </div>
           <p>Line</p>
           <div class="line-btns">
-            <span class="on">On</span>
-            <span class="off">Off</span>
+            <span class="btn btn-on">On</span>
+            <span class="btn btn-off">Off</span>
           </div>
         </div>
         <div class="dialog-start">
@@ -103,12 +112,67 @@ const DialogComponent = class extends BaseComponent<HTMLElement> {
       </div>
     </aside>
 `);
+    const urlLists = this.el.querySelector('.urlLists') as HTMLUListElement;
+    this.el
+      .querySelector('.btn-removeAll')
+      ?.addEventListener('click', () => (urlLists.innerHTML = ''));
+
+    const uploadBtn = this.el.querySelector('.btn-image');
+    uploadBtn?.addEventListener('click', () => {
+      const fileInput = this.el.querySelector('#img-upload') as HTMLInputElement;
+      fileInput.onchange = async (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        const fileList = target.files as FileList;
+        console.log(fileList);
+        if (!fileList.length) err('invalid file length');
+
+        for (let file of Object.values(fileList)) {
+          const li = urlLists.appendChild(el('li'));
+          if (li) {
+            li.innerHTML = `
+            <div>${file.name}</div>
+            <button class="btn btn-remove"><i class="far fa-trash-alt"></i></button>
+            `;
+            li.classList.add('list');
+            li.querySelector('.btn-remove')?.addEventListener('click', () =>
+              urlLists.removeChild(li),
+            );
+          }
+        }
+        this.urlArr = await this.convertFileToString(Object.values(fileList));
+      };
+    });
+    const input = this.el.querySelector('.imgPerCnt') as HTMLInputElement;
+    input.onchange = () => (this.imgPerPage = Number(input.value));
+  }
+
+  get infos(): Infos {
+    const infos = {
+      urlArr: this.urlArr,
+      imgPerPage: this.imgPerPage,
+    };
+    return infos;
   }
   add() {
     document.body.classList.toggle('dialog--active');
   }
   close() {
     document.body.classList.toggle('dialog--active');
+  }
+  private convertFileToString(imgUrls: File[]) {
+    return Promise.all(imgUrls.map((url) => this.readAsDataUrl(url)));
+  }
+  private readAsDataUrl(file: File): Promise<string> {
+    return new Promise((res, rej) => {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        if (typeof fileReader.result === 'string') res(fileReader.result);
+      };
+      fileReader.onerror = () => {
+        rej(fileReader);
+      };
+      fileReader.readAsDataURL(file);
+    });
   }
 };
 type stateParams = {
@@ -143,6 +207,8 @@ class Pagination {
     return { currentPage: this.currentPage, totalImg: this.totalImg, imgPerPage: this.imgPerPage };
   }
 }
+const page = Pagination.new();
+console.log(page);
 // test 1
 // const page = Pagination.new({ totalImg: 50, imgPerPage: 10 });
 // console.log(page);
