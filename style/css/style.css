@@ -60,6 +60,11 @@ select {
   font: inherit;
 }
 
+button {
+  border: none;
+  background-color: transparent;
+}
+
 /*
     8. Avoid text overflows
   */
@@ -177,6 +182,8 @@ video {
 
 body {
   background-color: #f3f2f6;
+  position: relative;
+  overflow: hidden;
 }
 
 .header {
@@ -208,12 +215,13 @@ body {
 .buttons .btn {
   width: 50px;
   height: 50px;
+  margin-top: 24px;
+  margin-left: 12px;
+  font-size: 25px;
+  cursor: pointer;
   background: #ffffff;
   border: 5px solid #ffe08f;
   border-radius: 50%;
-  margin-left: 12px;
-  margin-top: 24px;
-  cursor: pointer;
 }
 
 .buttons .btn:nth-last-child(1) {
@@ -245,5 +253,179 @@ body {
   width: 50%;
   height: 100%;
   border-right: 1px dashed #002;
+}
+
+.dialog {
+  position: absolute;
+  right: 0;
+  height: 90%;
+  top: 92px;
+  width: 30%;
+  min-width: 650px;
+  background-color: #7a83c1;
+  border-radius: 20px 0px 0px 20px;
+}
+
+.dialog .dialog-top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 8px 12px;
+  padding: 8px 12px;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+}
+
+.dialog .dialog-top .title {
+  font-size: 30px;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  color: #ffffff;
+}
+
+.dialog .dialog-top .top-buttons {
+  -webkit-box-flex: 20;
+      -ms-flex-positive: 20;
+          flex-grow: 20;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+
+.dialog .dialog-top .top-buttons .btn-export,
+.dialog .dialog-top .top-buttons .btn-close {
+  width: 50px;
+  height: 50px;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.dialog .dialog-top .top-buttons .btn-export {
+  color: #e97070;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.dialog .dialog-top .top-buttons .btn-close {
+  background: #dfe1fb;
+  border-radius: 50%;
+}
+
+.dialog .container {
+  padding: 24px;
+}
+
+.dialog .container .dialog-fileloader {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.dialog .container .dialog-fileloader .fileloader-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background-color: #dfe1fb;
+  border-radius: 5px;
+}
+
+.dialog .container .dialog-fileloader .fileloader-buttons .btn-image,
+.dialog .container .dialog-fileloader .fileloader-buttons .btn-remove {
+  width: 50px;
+  height: 50px;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.dialog .container .dialog-fileloader .contents {
+  overflow: auto;
+  background-color: #ffffff;
+  margin-top: 8px;
+  border-radius: 5px;
+  height: 500px;
+}
+
+.dialog .container .dialog-options {
+  position: relative;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 96px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  margin-top: 40px;
+  font-size: 23.07692px;
+  color: #ffffff;
+}
+
+.dialog .container .dialog-options .option-title {
+  position: absolute;
+  font-size: 33px;
+  letter-spacing: 3px;
+  left: 50%;
+  top: -15px;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  background-color: #7a83c1;
+  padding: 0 12px;
+  font-weight: 600;
+}
+
+.dialog .container .dialog-options .select-option input[type='text'] {
+  text-align: center;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.dialog .container .dialog-options .sort-btns,
+.dialog .container .dialog-options .line-btns {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  color: white;
+}
+
+.dialog .container .dialog-options .line-btns {
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.dialog .container .dialog-start {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.dialog .container .dialog-start .btn-play {
+  width: 100px;
+  height: 100px;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-size: 50px;
+  cursor: pointer;
+  color: #ffffff;
 }
 /*# sourceMappingURL=style.css.map */
