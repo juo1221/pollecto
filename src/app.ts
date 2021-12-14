@@ -119,6 +119,7 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
       </div>
     </aside>
 `);
+
     const urlLists = this.el.querySelector('.urlLists') as HTMLUListElement;
     this.el.querySelector('.btn-removeAll')?.addEventListener('click', () => {
       urlLists.innerHTML = '';
@@ -129,6 +130,7 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
     uploadBtn?.addEventListener('click', () => {
       const fileInput = this.el.querySelector('#img-upload') as HTMLInputElement;
       fileInput.onchange = async (e: Event) => {
+        urlLists.innerHTML = '';
         const target = e.target as HTMLInputElement;
         const fileList = target.files as FileList;
         const fileListArr = [...Object.values(fileList)];
@@ -150,10 +152,14 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
           }
         }
         this.urlArr = await this.convertFileToString(fileListArr);
+        this.validate();
       };
     });
     const input = this.el.querySelector('.imgPerCnt') as HTMLInputElement;
-    input.onchange = () => (this.imgPerPage = Number(input.value));
+    input.onchange = () => {
+      this.validate();
+      this.imgPerPage = Number(input.value);
+    };
   }
 
   get infos(): Infos {
@@ -186,6 +192,11 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
       };
       fileReader.readAsDataURL(file);
     });
+  }
+  private validate() {
+    if (this.urlArr.length > this.imgPerPage * 15) {
+      alert(`이미지 개수가 ${this.urlArr.length - this.imgPerPage * 15}개 초과합니다.`);
+    }
   }
 };
 type stateParams = {
@@ -260,7 +271,12 @@ const DomRenderer = class extends Renderer {
   }
   override _render() {
     const { urlArr, imgPerPage } = this.dialog.infos;
-    console.log(urlArr, imgPerPage);
+    if (urlArr.length > imgPerPage * 15) {
+      alert(`이미지 개수가 ${urlArr.length - imgPerPage * 15}개 초과합니다.`);
+      return;
+    }
+    const pagination = Pagination.new({ totalImg: urlArr.length, imgPerPage });
+    console.log(pagination);
   }
 };
 
