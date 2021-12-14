@@ -7,6 +7,7 @@ const err = (msg: string) => {
 };
 const el = <T extends keyof HTMLElementTagNameMap>(v: T) => document.createElement(v);
 const PAGEDVIDED: number = 10;
+const LIMIT = 30;
 interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
 }
@@ -198,8 +199,8 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
     });
   }
   private validate() {
-    if (this.urlArr.length > this.imgPerPage * 15) {
-      alert(`이미지 개수가 ${this.urlArr.length - this.imgPerPage * 15}개 초과합니다.`);
+    if (this.urlArr.length > this.imgPerPage * LIMIT) {
+      alert(`이미지 개수가 ${this.urlArr.length - this.imgPerPage * LIMIT}개 초과합니다.`);
     }
   }
 };
@@ -278,8 +279,8 @@ const DomRenderer = class extends Renderer {
     renderBtn.addEventListener('click', () => {
       const { urlArr, imgPerPage } = this.dialog.infos;
       if (!urlArr.length) return;
-      if (urlArr.length > imgPerPage * 15) {
-        alert(`이미지 개수가 ${urlArr.length - imgPerPage * 15}개 초과합니다.`);
+      if (urlArr.length > imgPerPage * LIMIT) {
+        alert(`이미지 개수가 ${urlArr.length - imgPerPage * LIMIT}개 초과합니다.`);
         return;
       }
       this.pagination = Pagination.new({ totalImg: urlArr.length, imgPerPage });
@@ -290,7 +291,8 @@ const DomRenderer = class extends Renderer {
     const { currentPage, totalImg, imgPerPage } = this.pagination.getState();
     const fisrtPage = Math.floor((currentPage - 1) / PAGEDVIDED) * PAGEDVIDED + 1;
     const lastPage = fisrtPage + PAGEDVIDED - 1;
-    const children = Array.from({ length: totalImg }, () => el('span'));
+    const totalPageCount = Math.ceil(totalImg / (imgPerPage * 2));
+    const children = Array.from({ length: totalPageCount }, () => el('span'));
     children[currentPage - 1]?.classList.add('current-page');
     const string: string = children
       .map((span, i) => ((span.innerHTML = String(i + 1)), span.outerHTML))
