@@ -7,6 +7,14 @@
 *::after {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  -webkit-user-select: none;
+  /* webkit (safari, chrome) browsers */
+  -moz-user-select: none;
+  /* mozilla browsers */
+  -khtml-user-select: none;
+  /* webkit (konqueror) browsers */
+  -ms-user-select: none;
+  /* IE10+ */
 }
 
 .fas,
@@ -238,6 +246,7 @@ body {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  position: relative;
 }
 
 .main .page-container {
@@ -254,6 +263,40 @@ body {
   width: 50%;
   height: 100%;
   border-right: 1px dashed #002;
+}
+
+.main .pagination-container {
+  position: absolute;
+  bottom: 0;
+  -webkit-transform: translateY(80px);
+          transform: translateY(80px);
+}
+
+.main .pagination-container span {
+  padding: 10.4px 15.6px;
+  background-color: #ffffff;
+  margin: 0 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.main .pagination-container span.current-page {
+  background-color: #878585;
+  color: #ffffff;
+}
+
+.main .pagination-container button.prev-page::before {
+  content: '<';
+}
+
+.main .pagination-container button.next-page::after {
+  content: '>';
+}
+
+.main .pagination-container .prev-page,
+.main .pagination-container .next-page {
+  cursor: pointer;
+  font-size: 20px;
 }
 
 .dialog {

@@ -6,7 +6,7 @@ const err = (msg: string) => {
   throw msg;
 };
 const el = <T extends keyof HTMLElementTagNameMap>(v: T) => document.createElement(v);
-
+const PAGEDVIDED: number = 10;
 interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
 }
@@ -63,7 +63,11 @@ interface Dialog {
   add: () => void;
   close: () => void;
 }
-
+interface Pagination {
+  new ({ totalImg, imgPerPage }: StateParams): Pagination;
+  setState(newState: StateParams): void;
+  getState(): GetState;
+}
 const DialogComponent = class extends BaseComponent<HTMLElement> implements Dialog {
   private urlArr: string[] = [];
   private imgPerPage: number = 6;
@@ -199,14 +203,16 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
     }
   }
 };
-type stateParams = {
+type StateParams = {
   currentPage?: number;
   totalImg?: number;
   imgPerPage?: number;
 };
+type GetState = Required<StateParams>;
+
 class Pagination {
   private static base = new Pagination(1, 0, 6);
-  static new({ totalImg, imgPerPage }: stateParams = {}) {
+  static new({ totalImg, imgPerPage }: StateParams = {}) {
     const {
       currentPage: baseCurrent,
       totalImg: baseTotalImg,
@@ -224,15 +230,14 @@ class Pagination {
     private imgPerPage: number,
   ) {}
 
-  setState(newState: stateParams) {
+  setState(newState: StateParams) {
     this.currentPage = newState.currentPage ? newState.currentPage : this.currentPage;
   }
-  getState(): stateParams {
+  getState(): GetState {
     return { currentPage: this.currentPage, totalImg: this.totalImg, imgPerPage: this.imgPerPage };
   }
 }
-const page = Pagination.new();
-console.log(page);
+
 // test 1
 // const page = Pagination.new({ totalImg: 50, imgPerPage: 10 });
 // console.log(page);
@@ -251,10 +256,13 @@ const Renderer = class {
 
 const DomRenderer = class extends Renderer {
   private dialog: Dialog & Component;
-  constructor(private parent: HTMLElement) {
+  private paginationContainer: HTMLDivElement;
+  private pagination: Pagination = Pagination.new();
+  constructor(private main: HTMLElement) {
     super();
+    this.paginationContainer = document.querySelector('.pagination-container') as HTMLDivElement;
     const page = new PageComponent();
-    page.attachTo(this.parent);
+    page.attachTo(this.main);
     this.dialog = new DialogComponent();
     this.dialog.attachTo(document.body);
     [new PageLeftComponent(), new PageRightComponent()].forEach((v) => page.addChild(v));
@@ -267,16 +275,48 @@ const DomRenderer = class extends Renderer {
       }
     });
     const renderBtn = this.dialog.renderBtn;
-    renderBtn.addEventListener('click', () => this.render());
+    renderBtn.addEventListener('click', () => {
+      const { urlArr, imgPerPage } = this.dialog.infos;
+      if (!urlArr.length) return;
+      if (urlArr.length > imgPerPage * 15) {
+        alert(`이미지 개수가 ${urlArr.length - imgPerPage * 15}개 초과합니다.`);
+        return;
+      }
+      this.pagination = Pagination.new({ totalImg: urlArr.length, imgPerPage });
+      this.render();
+    });
   }
   override _render() {
-    const { urlArr, imgPerPage } = this.dialog.infos;
-    if (urlArr.length > imgPerPage * 15) {
-      alert(`이미지 개수가 ${urlArr.length - imgPerPage * 15}개 초과합니다.`);
-      return;
-    }
-    const pagination = Pagination.new({ totalImg: urlArr.length, imgPerPage });
-    console.log(pagination);
+    const { currentPage, totalImg, imgPerPage } = this.pagination.getState();
+    const fisrtPage = Math.floor((currentPage - 1) / PAGEDVIDED) * PAGEDVIDED + 1;
+    const lastPage = fisrtPage + PAGEDVIDED - 1;
+    const children = Array.from({ length: totalImg }, () => el('span'));
+    children[currentPage - 1]?.classList.add('current-page');
+    const string: string = children
+      .map((span, i) => ((span.innerHTML = String(i + 1)), span.outerHTML))
+      .slice(fisrtPage - 1, lastPage)
+      .join('');
+    const html =
+      (currentPage > 1 ? `<button class="prev-page"></button>` : '') +
+      string +
+      (children.length !== currentPage ? `<button class="next-page"></button>` : '');
+    this.paginationContainer.innerHTML = html;
+
+    this.paginationContainer.querySelector('.next-page')?.addEventListener('click', () => {
+      this.pagination.setState({ currentPage: currentPage + 1 });
+      this.render();
+    });
+    this.paginationContainer.querySelector('.prev-page')?.addEventListener('click', () => {
+      this.pagination.setState({ currentPage: currentPage - 1 });
+      this.render();
+    });
+    this.paginationContainer.onclick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'SPAN') {
+        this.pagination.setState({ currentPage: +target.innerHTML });
+        this.render();
+      }
+    };
   }
 };
 
