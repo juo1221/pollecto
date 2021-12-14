@@ -57,7 +57,14 @@ const PageRightComponent = class extends BaseComponent<HTMLElement> {
     super(`<div class="page-right"></div>`);
   }
 };
-const DialogComponent = class extends BaseComponent<HTMLElement> {
+interface Dialog {
+  get infos(): Infos;
+  get renderBtn(): HTMLElement;
+  add: () => void;
+  close: () => void;
+}
+
+const DialogComponent = class extends BaseComponent<HTMLElement> implements Dialog {
   private urlArr: string[] = [];
   private imgPerPage: number = 6;
   // private sort: string = 'C';
@@ -113,9 +120,10 @@ const DialogComponent = class extends BaseComponent<HTMLElement> {
     </aside>
 `);
     const urlLists = this.el.querySelector('.urlLists') as HTMLUListElement;
-    this.el
-      .querySelector('.btn-removeAll')
-      ?.addEventListener('click', () => (urlLists.innerHTML = ''));
+    this.el.querySelector('.btn-removeAll')?.addEventListener('click', () => {
+      urlLists.innerHTML = '';
+      this.urlArr = [];
+    });
 
     const uploadBtn = this.el.querySelector('.btn-image');
     uploadBtn?.addEventListener('click', () => {
@@ -123,10 +131,10 @@ const DialogComponent = class extends BaseComponent<HTMLElement> {
       fileInput.onchange = async (e: Event) => {
         const target = e.target as HTMLInputElement;
         const fileList = target.files as FileList;
-        console.log(fileList);
-        if (!fileList.length) err('invalid file length');
+        const fileListArr = [...Object.values(fileList)];
+        if (!fileListArr.length) err('invalid file length');
 
-        for (let file of Object.values(fileList)) {
+        for (let file of fileListArr) {
           const li = urlLists.appendChild(el('li'));
           if (li) {
             li.innerHTML = `
@@ -134,12 +142,14 @@ const DialogComponent = class extends BaseComponent<HTMLElement> {
             <button class="btn btn-remove"><i class="far fa-trash-alt"></i></button>
             `;
             li.classList.add('list');
-            li.querySelector('.btn-remove')?.addEventListener('click', () =>
-              urlLists.removeChild(li),
-            );
+            li.querySelector('.btn-remove')?.addEventListener('click', async () => {
+              urlLists.removeChild(li);
+              fileListArr.splice(fileListArr.indexOf(file), 1);
+              this.urlArr = await this.convertFileToString(fileListArr);
+            });
           }
         }
-        this.urlArr = await this.convertFileToString(Object.values(fileList));
+        this.urlArr = await this.convertFileToString(fileListArr);
       };
     });
     const input = this.el.querySelector('.imgPerCnt') as HTMLInputElement;
@@ -152,6 +162,9 @@ const DialogComponent = class extends BaseComponent<HTMLElement> {
       imgPerPage: this.imgPerPage,
     };
     return infos;
+  }
+  get renderBtn(): HTMLElement {
+    return this.el.querySelector('.btn-play') as HTMLButtonElement;
   }
   add() {
     document.body.classList.toggle('dialog--active');
@@ -226,24 +239,29 @@ const Renderer = class {
 };
 
 const DomRenderer = class extends Renderer {
+  private dialog: Dialog & Component;
   constructor(private parent: HTMLElement) {
     super();
     const page = new PageComponent();
     page.attachTo(this.parent);
-    const dialog = new DialogComponent();
-    dialog.attachTo(document.body);
+    this.dialog = new DialogComponent();
+    this.dialog.attachTo(document.body);
     [new PageLeftComponent(), new PageRightComponent()].forEach((v) => page.addChild(v));
     const menuBtn = document.querySelector('.btn-bar');
-
     menuBtn?.addEventListener('click', () => {
-      dialog.add();
+      this.dialog.add();
       const closeBtn = document.querySelector('.btn-close');
       if (closeBtn instanceof HTMLButtonElement) {
-        closeBtn.onclick = () => dialog.close();
+        closeBtn.onclick = () => this.dialog.close();
       }
     });
+    const renderBtn = this.dialog.renderBtn;
+    renderBtn.addEventListener('click', () => this.render());
   }
-  override _render() {}
+  override _render() {
+    const { urlArr, imgPerPage } = this.dialog.infos;
+    console.log(urlArr, imgPerPage);
+  }
 };
 
 new DomRenderer(document.querySelector('.main') as HTMLElement);
