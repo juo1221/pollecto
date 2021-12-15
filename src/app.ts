@@ -10,11 +10,18 @@ const PAGEDVIDED: number = 10;
 const LIMIT = 30;
 interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
+  removeFrom(parent: HTMLElement): void;
+}
+interface Composable {
+  addChild(child: Component): void;
+}
+interface SectionContainer extends Component, Composable {
+  reset(): void;
 }
 
 type Infos = {
-  urlArr: string[];
-  imgPerPage: number;
+  readonly urlArr: string[];
+  readonly imgPerPage: number;
 };
 // if (module.hot) {
 //   console.log('핫모듈!');
@@ -35,12 +42,12 @@ const BaseComponent = class<T extends HTMLElement> implements Component {
   attachTo(parent: HTMLElement, position: InsertPosition = 'beforeend') {
     parent.insertAdjacentElement(position, this.el);
   }
-  // removeFrom(parent: HTMLElement) {
-  //   parent.removeChild(this.el);
-  // }
+  removeFrom(parent: HTMLElement) {
+    parent.removeChild(this.el);
+  }
 };
 
-const PageComponent = class extends BaseComponent<HTMLElement> {
+const PageComponent = class extends BaseComponent<HTMLElement> implements Composable {
   constructor() {
     super(`<div class="page-container"></div>`);
   }
@@ -48,14 +55,26 @@ const PageComponent = class extends BaseComponent<HTMLElement> {
     child.attachTo(this.el);
   }
 };
-const PageLeftComponent = class extends BaseComponent<HTMLElement> {
+const PageLeftComponent = class extends BaseComponent<HTMLElement> implements SectionContainer {
   constructor() {
     super(`<div class="page-left"></div>`);
   }
+  addChild(child: Component) {
+    child.attachTo(this.el);
+  }
+  reset() {
+    this.el.innerHTML = '';
+  }
 };
-const PageRightComponent = class extends BaseComponent<HTMLElement> {
+const PageRightComponent = class extends BaseComponent<HTMLElement> implements SectionContainer {
   constructor() {
     super(`<div class="page-right"></div>`);
+  }
+  addChild(child: Component) {
+    child.attachTo(this.el);
+  }
+  reset() {
+    this.el.innerHTML = '';
   }
 };
 interface Dialog {
@@ -239,6 +258,20 @@ class Pagination {
   }
 }
 
+const ImageComponent = class extends BaseComponent<HTMLImageElement> {
+  constructor(imgUrl: string) {
+    super(`
+      <div class="image__holder">
+        <img class="image__thumbnail">
+      </div>
+    `);
+
+    const imgEl = this.el.querySelector('.image__thumbnail') as HTMLImageElement;
+    imgEl.src = imgUrl;
+    console.log(imgEl);
+  }
+};
+
 // test 1
 // const page = Pagination.new({ totalImg: 50, imgPerPage: 10 });
 // console.log(page);
@@ -259,6 +292,9 @@ const DomRenderer = class extends Renderer {
   private dialog: Dialog & Component;
   private paginationContainer: HTMLDivElement;
   private pagination: Pagination = Pagination.new();
+  private pageLeft: SectionContainer = new PageLeftComponent();
+  private pageRight: SectionContainer = new PageRightComponent();
+
   constructor(private main: HTMLElement) {
     super();
     this.paginationContainer = document.querySelector('.pagination-container') as HTMLDivElement;
@@ -266,7 +302,7 @@ const DomRenderer = class extends Renderer {
     page.attachTo(this.main);
     this.dialog = new DialogComponent();
     this.dialog.attachTo(document.body);
-    [new PageLeftComponent(), new PageRightComponent()].forEach((v) => page.addChild(v));
+    [this.pageLeft, this.pageRight].forEach((v) => (page.addChild(v), v));
     const menuBtn = document.querySelector('.btn-bar');
     menuBtn?.addEventListener('click', () => {
       this.dialog.add();
@@ -277,13 +313,17 @@ const DomRenderer = class extends Renderer {
     });
     const renderBtn = this.dialog.renderBtn;
     renderBtn.addEventListener('click', () => {
-      const { urlArr, imgPerPage } = this.dialog.infos;
-      if (!urlArr.length) return;
-      if (urlArr.length > imgPerPage * LIMIT) {
-        alert(`이미지 개수가 ${urlArr.length - imgPerPage * LIMIT}개 초과합니다.`);
+      // pageL, pageR 초기화 필요
+      const {
+        urlArr: { length },
+        imgPerPage,
+      } = this.dialog.infos;
+      if (!length) return;
+      if (length > imgPerPage * LIMIT) {
+        alert(`이미지 개수가 ${length - imgPerPage * LIMIT}개 초과합니다.`);
         return;
       }
-      this.pagination = Pagination.new({ totalImg: urlArr.length, imgPerPage });
+      this.pagination = Pagination.new({ totalImg: length, imgPerPage });
       this.render();
     });
   }
@@ -303,6 +343,19 @@ const DomRenderer = class extends Renderer {
       string +
       (children.length !== currentPage ? `<button class="next-page"></button>` : '');
     this.paginationContainer.innerHTML = html;
+
+    const { urlArr } = this.dialog.infos;
+    const showImgCnt = imgPerPage * 2;
+    const startIdx = (currentPage - 1) * showImgCnt;
+    this.pageLeft.reset();
+    this.pageRight.reset();
+    urlArr.slice(startIdx, startIdx + showImgCnt).forEach((urlStr, cnt) => {
+      if (cnt >= imgPerPage) {
+        this.pageRight.addChild(new ImageComponent(urlStr));
+      } else {
+        this.pageLeft.addChild(new ImageComponent(urlStr));
+      }
+    });
 
     this.paginationContainer.querySelector('.next-page')?.addEventListener('click', () => {
       this.pagination.setState({ currentPage: currentPage + 1 });

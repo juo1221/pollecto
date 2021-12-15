@@ -96,12 +96,20 @@ body {
     width: 95%;
     height: 75vh;
     border: 1px solid $color-black;
+    text-align: center;
+    overflow: hidden;
     .page-left {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      justify-items: center;
       width: 50%;
-      height: 100%;
       border-right: 1px dashed $color-black;
     }
     .page-right {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      justify-items: center;
+      width: 50%;
     }
   }
   .pagination-container {
@@ -268,6 +276,16 @@ body {
       }
     }
   }
+}
+
+// 200dpi a4(201*297mm)
+// 1653.5px * 2338.6px
+.image__holder {
+  width: 67.5%;
+}
+.image__thumbnail {
+  width: 100%;
+  border: 1px solid grey;
 }
 
 .dialog--active {
