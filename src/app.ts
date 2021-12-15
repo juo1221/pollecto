@@ -1,5 +1,5 @@
 /// <reference types="webpack/module" />
-console.log(import.meta.webpack);
+
 import '../style/css/style.css';
 
 const err = (msg: string) => {
@@ -24,10 +24,10 @@ type Infos = {
   readonly imgPerPage: number;
 };
 // if (module.hot) {
-//   console.log('핫모듈!');
+//
 //   // module.hot.accept("./result", async () => {
 //   //   // 감지하고자 하는 모듈을 첫번째 인자로 등록
-//   //   console.log("result 모듈 변경됨");
+//   //
 //   //   resultEl.innerHTML = await result.render();
 //   // });
 // }
@@ -261,22 +261,19 @@ class Pagination {
 const ImageComponent = class extends BaseComponent<HTMLImageElement> {
   constructor(imgUrl: string) {
     super(`
-      <div class="image__holder">
         <img class="image__thumbnail">
-      </div>
     `);
 
-    const imgEl = this.el.querySelector('.image__thumbnail') as HTMLImageElement;
+    const imgEl = this.el as HTMLImageElement;
     imgEl.src = imgUrl;
-    console.log(imgEl);
   }
 };
 
 // test 1
 // const page = Pagination.new({ totalImg: 50, imgPerPage: 10 });
-// console.log(page);
+//
 // page.setState({ currentPage: 10 });
-// console.log(page);
+//
 
 const Renderer = class {
   constructor() {}

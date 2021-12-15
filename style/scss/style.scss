@@ -2,7 +2,7 @@
 
 //color
 $color-header: #d3d7e8;
-$color-main: #f3f2f6;
+$color-main: rgba(176, 176, 176, 0.069);
 $color-icon: #ffe08f;
 $color-dialog: #7a83c1;
 $color-fileLoader: #dfe1fb;
@@ -48,11 +48,16 @@ $animation-duration: 300ms;
   font-size: $width-icon / $fontSize;
   cursor: pointer;
 }
+@mixin yellowBtn {
+  background: $color-white;
+  border: 5px solid $color-icon;
+  border-radius: $border-half;
+}
 
 body {
-  background-color: $color-main;
+  background-color: $color-white;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 .header {
   @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
@@ -72,12 +77,9 @@ body {
 }
 .buttons {
   position: relative;
-
   .btn {
     @include customBtn(1, 1, 3, 1, 2);
-    background: $color-white;
-    border: 5px solid $color-icon;
-    border-radius: $border-half;
+    @include yellowBtn;
 
     &:nth-last-child(1) {
       position: absolute;
@@ -91,10 +93,12 @@ body {
   justify-content: center;
   position: relative;
   .page-container {
+    background: $color-main;
     display: flex;
     margin-top: $height-space * 5;
-    width: 95%;
-    height: 75vh;
+    width: 1196 * 2px;
+    min-width: 1196 * 2px;
+    height: 1683px;
     border: 1px solid $color-black;
     text-align: center;
     overflow: hidden;
@@ -116,6 +120,7 @@ body {
     position: absolute;
     bottom: 0;
     transform: translateY($height-space * 10);
+    padding-bottom: 30px;
     span {
       padding: $height-space * 1.3 $width-space * 1.3;
       background-color: $color-white;
@@ -124,8 +129,7 @@ body {
       cursor: pointer;
     }
     span.current-page {
-      background-color: rgb(135, 133, 133);
-      color: $color-white;
+      @include yellowBtn;
     }
     button.prev-page::before {
       content: '<';
@@ -280,12 +284,9 @@ body {
 
 // 200dpi a4(201*297mm)
 // 1653.5px * 2338.6px
-.image__holder {
-  width: 67.5%;
-}
+
 .image__thumbnail {
-  width: 100%;
-  border: 1px solid grey;
+  width: 75%;
 }
 
 .dialog--active {
