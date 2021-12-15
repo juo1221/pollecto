@@ -219,6 +219,9 @@ body {
 
 .buttons {
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .buttons .btn {
@@ -231,12 +234,44 @@ body {
   background: #ffffff;
   border: 5px solid #ffe08f;
   border-radius: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .buttons .btn:nth-last-child(1) {
   position: absolute;
   right: 0;
   margin-right: 12px;
+}
+
+.buttons .btn-move {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.buttons .btn-size {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.buttons .btn-zoom {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.buttons .activated {
+  background: #ffffff;
+  border: 5px solid #0934e2;
+  border-radius: 50%;
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
 }
 
 .main {

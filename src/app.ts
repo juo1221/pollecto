@@ -258,6 +258,13 @@ class Pagination {
   }
 }
 
+interface BtnComponent {
+  toggle(): void;
+  get state(): BtnComponentState;
+}
+type BtnComponentState = {
+  isActivated: boolean;
+};
 const ImageComponent = class extends BaseComponent<HTMLImageElement> {
   constructor(imgUrl: string) {
     super(`
@@ -267,13 +274,47 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> {
     const imgEl = this.el as HTMLImageElement;
     imgEl.src = imgUrl;
   }
+  move(btnComponent: BtnComponent) {
+    if (!this.checkState(btnComponent.state)) return;
+  }
+  private checkState(state: BtnComponentState): boolean {
+    return state.isActivated === true;
+  }
 };
 
-// test 1
-// const page = Pagination.new({ totalImg: 50, imgPerPage: 10 });
-//
-// page.setState({ currentPage: 10 });
-//
+const ZoomBtnComponent = class implements BtnComponent {
+  private el = document.querySelector('.btn-zoom') as HTMLButtonElement;
+  private isActivated: boolean = false;
+  toggle() {
+    this.isActivated = !this.isActivated;
+    this.el.classList.toggle('activated');
+  }
+  get state(): BtnComponentState {
+    return { isActivated: this.isActivated };
+  }
+};
+const SizeBtnComponent = class implements BtnComponent {
+  private el = document.querySelector('.btn-size') as HTMLButtonElement;
+  private isActivated: boolean = false;
+  toggle() {
+    this.isActivated = !this.isActivated;
+    this.el.classList.toggle('activated');
+  }
+  get state(): BtnComponentState {
+    return { isActivated: this.isActivated };
+  }
+};
+const MoveBtnComponent = class implements BtnComponent {
+  private el = document.querySelector('.btn-move') as HTMLButtonElement;
+  private isActivated: boolean = false;
+  toggle() {
+    this.isActivated = !this.isActivated;
+    this.el.classList.toggle('activated');
+  }
+  get state(): BtnComponentState {
+    return { isActivated: this.isActivated };
+  }
+};
 
 const Renderer = class {
   constructor() {}
@@ -291,6 +332,12 @@ const DomRenderer = class extends Renderer {
   private pagination: Pagination = Pagination.new();
   private pageLeft: SectionContainer = new PageLeftComponent();
   private pageRight: SectionContainer = new PageRightComponent();
+  private moveComponent: BtnComponent = new MoveBtnComponent();
+  private sizeComponent: BtnComponent = new SizeBtnComponent();
+  private zoomComponent: BtnComponent = new ZoomBtnComponent();
+  private moveBtn: HTMLButtonElement = document.querySelector('.btn-move') as HTMLButtonElement;
+  private sizeBtn: HTMLButtonElement = document.querySelector('.btn-size') as HTMLButtonElement;
+  private zoomBtn: HTMLButtonElement = document.querySelector('.btn-zoom') as HTMLButtonElement;
 
   constructor(private main: HTMLElement) {
     super();
@@ -368,6 +415,15 @@ const DomRenderer = class extends Renderer {
         this.pagination.setState({ currentPage: +target.innerHTML });
         this.render();
       }
+    };
+    this.moveBtn.onclick = () => {
+      this.moveComponent.toggle();
+    };
+    this.sizeBtn.onclick = () => {
+      this.sizeComponent.toggle();
+    };
+    this.zoomBtn.onclick = () => {
+      this.zoomComponent.toggle();
     };
   }
 };

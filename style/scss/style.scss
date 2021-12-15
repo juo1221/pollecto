@@ -10,6 +10,7 @@ $color-white: #ffffff;
 $color-black: #002;
 $color-page-liner: #7a83c1;
 $color-center-liner: #59638a;
+$color-blue: #0934e2;
 
 //width
 $width-img-container: 1322.42px;
@@ -48,9 +49,9 @@ $animation-duration: 300ms;
   font-size: $width-icon / $fontSize;
   cursor: pointer;
 }
-@mixin yellowBtn {
+@mixin colorBtn($color) {
   background: $color-white;
-  border: 5px solid $color-icon;
+  border: 5px solid $color;
   border-radius: $border-half;
 }
 
@@ -77,15 +78,33 @@ body {
 }
 .buttons {
   position: relative;
+  display: flex;
+
   .btn {
     @include customBtn(1, 1, 3, 1, 2);
-    @include yellowBtn;
+    @include colorBtn($color-icon);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:nth-last-child(1) {
       position: absolute;
       right: 0;
       margin-right: $width-space;
     }
+  }
+  .btn-move {
+    transition: all 0.3s ease;
+  }
+  .btn-size {
+    transition: all 0.3s ease;
+  }
+  .btn-zoom {
+    transition: all 0.3s ease;
+  }
+  .activated {
+    @include colorBtn($color-blue);
+    transform: scale(1.1);
   }
 }
 .main {
@@ -129,7 +148,7 @@ body {
       cursor: pointer;
     }
     span.current-page {
-      @include yellowBtn;
+      @include colorBtn($color-icon);
     }
     button.prev-page::before {
       content: '<';
