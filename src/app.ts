@@ -16,6 +16,8 @@ interface Composable {
   addChild(child: Component): void;
 }
 interface SectionContainer extends Component, Composable {
+  addItems(item: ItemComponent): void;
+  getItems(): ItemComponent[];
   reset(): void;
 }
 
@@ -55,9 +57,18 @@ const PageComponent = class extends BaseComponent<HTMLElement> implements Compos
     child.attachTo(this.el);
   }
 };
+
 const PageLeftComponent = class extends BaseComponent<HTMLElement> implements SectionContainer {
+  private imgArr: Set<ItemComponent> = new Set();
   constructor() {
     super(`<div class="page-left"></div>`);
+  }
+  addItems(item: ItemComponent) {
+    this.imgArr.add(item);
+  }
+  getItems(): ItemComponent[] {
+    console.log(this.imgArr);
+    return Array.from(this.imgArr);
   }
   addChild(child: Component) {
     child.attachTo(this.el);
@@ -67,8 +78,15 @@ const PageLeftComponent = class extends BaseComponent<HTMLElement> implements Se
   }
 };
 const PageRightComponent = class extends BaseComponent<HTMLElement> implements SectionContainer {
+  private imgArr: Set<ItemComponent> = new Set();
   constructor() {
     super(`<div class="page-right"></div>`);
+  }
+  addItems(item: ItemComponent) {
+    this.imgArr.add(item);
+  }
+  getItems(): ItemComponent[] {
+    return Array.from(this.imgArr);
   }
   addChild(child: Component) {
     child.attachTo(this.el);
@@ -265,7 +283,11 @@ interface BtnComponent {
 type BtnComponentState = {
   isActivated: boolean;
 };
-const ImageComponent = class extends BaseComponent<HTMLImageElement> {
+
+interface ItemComponent {
+  move(state: boolean): void;
+}
+const ImageComponent = class extends BaseComponent<HTMLImageElement> implements ItemComponent {
   constructor(imgUrl: string) {
     super(`
         <img class="image__thumbnail">
@@ -274,11 +296,15 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> {
     const imgEl = this.el as HTMLImageElement;
     imgEl.src = imgUrl;
   }
-  move(btnComponent: BtnComponent) {
-    if (!this.checkState(btnComponent.state)) return;
+  move(state: boolean) {
+    if (this.checkState(state)) {
+      this.el.classList.add('moving');
+    } else {
+      this.el.classList.remove('moving');
+    }
   }
-  private checkState(state: BtnComponentState): boolean {
-    return state.isActivated === true;
+  private checkState(state: boolean): boolean {
+    return state === true;
   }
 };
 
@@ -308,6 +334,7 @@ const MoveBtnComponent = class implements BtnComponent {
   private el = document.querySelector('.btn-move') as HTMLButtonElement;
   private isActivated: boolean = false;
   toggle() {
+    console.log('toggle!!');
     this.isActivated = !this.isActivated;
     this.el.classList.toggle('activated');
   }
@@ -394,21 +421,32 @@ const DomRenderer = class extends Renderer {
     this.pageLeft.reset();
     this.pageRight.reset();
     urlArr.slice(startIdx, startIdx + showImgCnt).forEach((urlStr, cnt) => {
+      const image = new ImageComponent(urlStr);
       if (cnt >= imgPerPage) {
-        this.pageRight.addChild(new ImageComponent(urlStr));
+        this.pageRight.addItems(image);
+        this.pageRight.addChild(image);
       } else {
-        this.pageLeft.addChild(new ImageComponent(urlStr));
+        this.pageLeft.addItems(image);
+        this.pageLeft.addChild(image);
       }
     });
 
-    this.paginationContainer.querySelector('.next-page')?.addEventListener('click', () => {
-      this.pagination.setState({ currentPage: currentPage + 1 });
-      this.render();
-    });
-    this.paginationContainer.querySelector('.prev-page')?.addEventListener('click', () => {
-      this.pagination.setState({ currentPage: currentPage - 1 });
-      this.render();
-    });
+    const nextPage = this.paginationContainer.querySelector('.next-page') as HTMLButtonElement;
+    if (nextPage) {
+      nextPage.onclick = () => {
+        this.pagination.setState({ currentPage: currentPage + 1 });
+        this.render();
+      };
+    }
+
+    const prevPage = this.paginationContainer.querySelector('.prev-page') as HTMLButtonElement;
+    if (prevPage) {
+      prevPage.onclick = () => {
+        this.pagination.setState({ currentPage: currentPage - 1 });
+        this.render();
+      };
+    }
+
     this.paginationContainer.onclick = (e: Event) => {
       const target = e.target as HTMLElement;
       if (target.tagName === 'SPAN') {
@@ -418,6 +456,9 @@ const DomRenderer = class extends Renderer {
     };
     this.moveBtn.onclick = () => {
       this.moveComponent.toggle();
+      [this.pageLeft.getItems(), this.pageRight.getItems()]
+        .flat(1)
+        .forEach((img) => img.move(this.moveComponent.state.isActivated));
     };
     this.sizeBtn.onclick = () => {
       this.sizeComponent.toggle();

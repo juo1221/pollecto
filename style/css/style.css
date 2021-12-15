@@ -575,6 +575,10 @@ body {
   width: 75%;
 }
 
+.moving {
+  cursor: move;
+}
+
 @media screen and (min-width: 1024px) {
   .dialog--active .dialog {
     -webkit-transform: translateX(-100%);
