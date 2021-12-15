@@ -67,7 +67,6 @@ const PageLeftComponent = class extends BaseComponent<HTMLElement> implements Se
     this.imgArr.add(item);
   }
   getItems(): ItemComponent[] {
-    console.log(this.imgArr);
     return Array.from(this.imgArr);
   }
   addChild(child: Component) {
@@ -108,7 +107,7 @@ interface Pagination {
 }
 const DialogComponent = class extends BaseComponent<HTMLElement> implements Dialog {
   private urlArr: string[] = [];
-  private imgPerPage: number = 6;
+  private imgPerPage: number = 4;
   // private sort: string = 'C';
   // private line: string = 'On';
 
@@ -135,12 +134,12 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
           <h1 class="option-title">OPTIONS</h1>
           <p>Img / Page</p>
           <select class="imgPerCnt">
-            <option>6</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+          <option>4</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>5</option>
+          <option>6</option>
           </select>
   
           <p>Sort</p>
@@ -284,7 +283,7 @@ type BtnComponentState = {
   isActivated: boolean;
 };
 
-interface ItemComponent {
+interface ItemComponent extends Component {
   move(state: boolean): void;
 }
 const ImageComponent = class extends BaseComponent<HTMLImageElement> implements ItemComponent {
@@ -297,6 +296,7 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
     imgEl.src = imgUrl;
   }
   move(state: boolean) {
+    console.log('움직임등록!');
     if (this.checkState(state)) {
       this.el.classList.add('moving');
     } else {
@@ -334,7 +334,6 @@ const MoveBtnComponent = class implements BtnComponent {
   private el = document.querySelector('.btn-move') as HTMLButtonElement;
   private isActivated: boolean = false;
   toggle() {
-    console.log('toggle!!');
     this.isActivated = !this.isActivated;
     this.el.classList.toggle('activated');
   }
@@ -357,6 +356,7 @@ const DomRenderer = class extends Renderer {
   private dialog: Dialog & Component;
   private paginationContainer: HTMLDivElement;
   private pagination: Pagination = Pagination.new();
+  private urlStrSaveArr: string[] = [];
   private pageLeft: SectionContainer = new PageLeftComponent();
   private pageRight: SectionContainer = new PageRightComponent();
   private moveComponent: BtnComponent = new MoveBtnComponent();
@@ -384,7 +384,6 @@ const DomRenderer = class extends Renderer {
     });
     const renderBtn = this.dialog.renderBtn;
     renderBtn.addEventListener('click', () => {
-      // pageL, pageR 초기화 필요
       const {
         urlArr: { length },
         imgPerPage,
@@ -395,6 +394,7 @@ const DomRenderer = class extends Renderer {
         return;
       }
       this.pagination = Pagination.new({ totalImg: length, imgPerPage });
+      this.urlStrSaveArr = [];
       this.render();
     });
   }
@@ -421,7 +421,23 @@ const DomRenderer = class extends Renderer {
     this.pageLeft.reset();
     this.pageRight.reset();
     urlArr.slice(startIdx, startIdx + showImgCnt).forEach((urlStr, cnt) => {
-      const image = new ImageComponent(urlStr);
+      let image;
+      if (this.urlStrSaveArr.includes(urlStr)) {
+        const savedImageArr = [this.pageLeft.getItems(), this.pageRight.getItems()].flat(1);
+        savedImageArr.slice(startIdx, startIdx + showImgCnt).forEach((img, cnt) => {
+          image = img;
+          if (cnt >= imgPerPage) {
+            this.pageRight.addChild(image);
+          } else {
+            this.pageLeft.addChild(image);
+          }
+        });
+        return;
+      } else {
+        this.urlStrSaveArr.push(urlStr);
+        image = new ImageComponent(urlStr);
+      }
+
       if (cnt >= imgPerPage) {
         this.pageRight.addItems(image);
         this.pageRight.addChild(image);
@@ -430,7 +446,6 @@ const DomRenderer = class extends Renderer {
         this.pageLeft.addChild(image);
       }
     });
-
     const nextPage = this.paginationContainer.querySelector('.next-page') as HTMLButtonElement;
     if (nextPage) {
       nextPage.onclick = () => {
@@ -438,7 +453,6 @@ const DomRenderer = class extends Renderer {
         this.render();
       };
     }
-
     const prevPage = this.paginationContainer.querySelector('.prev-page') as HTMLButtonElement;
     if (prevPage) {
       prevPage.onclick = () => {
@@ -446,9 +460,9 @@ const DomRenderer = class extends Renderer {
         this.render();
       };
     }
-
     this.paginationContainer.onclick = (e: Event) => {
       const target = e.target as HTMLElement;
+      if (currentPage === +target.innerHTML) return;
       if (target.tagName === 'SPAN') {
         this.pagination.setState({ currentPage: +target.innerHTML });
         this.render();
