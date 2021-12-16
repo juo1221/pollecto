@@ -134,10 +134,10 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
           <h1 class="option-title">OPTIONS</h1>
           <p>Img / Page</p>
           <select class="imgPerCnt">
-          <option>4</option>
           <option>1</option>
           <option>2</option>
           <option>3</option>
+          <option selected>4</option>
           <option>5</option>
           <option>6</option>
           </select>
@@ -351,7 +351,11 @@ const Renderer = class {
     err('must be overrided!');
   }
 };
-
+type AddImage = {
+  cnt: number;
+  image: ItemComponent;
+  imgPerPage: number;
+};
 const DomRenderer = class extends Renderer {
   private dialog: Dialog & Component;
   private paginationContainer: HTMLDivElement;
@@ -399,6 +403,7 @@ const DomRenderer = class extends Renderer {
     });
   }
   override _render() {
+    this.pageReset();
     const { currentPage, totalImg, imgPerPage } = this.pagination.getState();
     const fisrtPage = Math.floor((currentPage - 1) / PAGEDVIDED) * PAGEDVIDED + 1;
     const lastPage = fisrtPage + PAGEDVIDED - 1;
@@ -418,33 +423,20 @@ const DomRenderer = class extends Renderer {
     const { urlArr } = this.dialog.infos;
     const showImgCnt = imgPerPage * 2;
     const startIdx = (currentPage - 1) * showImgCnt;
-    this.pageLeft.reset();
-    this.pageRight.reset();
     urlArr.slice(startIdx, startIdx + showImgCnt).forEach((urlStr, cnt) => {
       let image;
       if (this.urlStrSaveArr.includes(urlStr)) {
         const savedImageArr = [this.pageLeft.getItems(), this.pageRight.getItems()].flat(1);
         savedImageArr.slice(startIdx, startIdx + showImgCnt).forEach((img, cnt) => {
           image = img;
-          if (cnt >= imgPerPage) {
-            this.pageRight.addChild(image);
-          } else {
-            this.pageLeft.addChild(image);
-          }
+          this.addImage({ cnt, image, imgPerPage });
         });
         return;
       } else {
         this.urlStrSaveArr.push(urlStr);
         image = new ImageComponent(urlStr);
       }
-
-      if (cnt >= imgPerPage) {
-        this.pageRight.addItems(image);
-        this.pageRight.addChild(image);
-      } else {
-        this.pageLeft.addItems(image);
-        this.pageLeft.addChild(image);
-      }
+      this.addImage({ cnt, image, imgPerPage });
     });
     const nextPage = this.paginationContainer.querySelector('.next-page') as HTMLButtonElement;
     if (nextPage) {
@@ -480,6 +472,19 @@ const DomRenderer = class extends Renderer {
     this.zoomBtn.onclick = () => {
       this.zoomComponent.toggle();
     };
+  }
+  private addImage({ cnt, image, imgPerPage }: AddImage) {
+    if (cnt >= imgPerPage) {
+      this.pageRight.addItems(image);
+      this.pageRight.addChild(image);
+    } else {
+      this.pageLeft.addItems(image);
+      this.pageLeft.addChild(image);
+    }
+  }
+  private pageReset() {
+    this.pageLeft.reset();
+    this.pageRight.reset();
   }
 };
 
