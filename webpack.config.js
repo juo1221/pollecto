@@ -1,27 +1,31 @@
-const path = require("path");
-const webpack = require("webpack");
-const ENV = process.env["NODE_ENV"];
-const mode = ENV || "development";
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MinifyWebpackPlugin = require("mini-css-extract-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const childProces = require("child_process");
-const TerserPlugin = require("terser-webpack-plugin");
+const path = require('path');
+const webpack = require('webpack');
+const ENV = process.env['NODE_ENV'];
+const mode = ENV || 'development';
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MinifyWebpackPlugin = require('mini-css-extract-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const childProces = require('child_process');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode,
   entry: {
-    main: "./src/app.ts",
+    main: './src/app.ts',
   },
-  devtool: ENV === "development" ? "inline-source-map" : "cheap-source-map",
+  devtool: ENV === 'development' ? 'inline-source-map' : 'cheap-source-map',
   output: {
-    path: path.resolve("./dist"),
-    filename: "[name].js",
+    path: path.resolve('./dist'),
+    filename: '[name].js',
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: ['.ts', '.js'],
+    alias: {
+      '@Custom': path.resolve(__dirname, './src/custom'),
+      '@Common': path.resolve(__dirname, './src/common'),
+    },
   },
-  stats: "errors-only",
+  stats: 'errors-only',
   devServer: {
     hot: true,
     client: {
@@ -32,15 +36,12 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          ENV === "development" ? "style-loader" : MinifyWebpackPlugin.loader,
-          "css-loader",
-        ],
+        use: [ENV === 'development' ? 'style-loader' : MinifyWebpackPlugin.loader, 'css-loader'],
       },
       {
         test: /\.ts$/,
-        use: "ts-loader",
-        exclude: "/node_modules/",
+        use: 'ts-loader',
+        exclude: '/node_modules/',
       },
     ],
   },
@@ -48,26 +49,24 @@ module.exports = {
     new webpack.BannerPlugin({
       banner: `
       Build date: ${new Date().toLocaleString()}
-      Commit Version: ${childProces.execSync("git rev-parse --short HEAD")}
-      Author: ${childProces.execSync("git config user.name")}
-      email: ${childProces.execSync("git config user.email")}
+      Commit Version: ${childProces.execSync('git rev-parse --short HEAD')}
+      Author: ${childProces.execSync('git config user.name')}
+      email: ${childProces.execSync('git config user.email')}
       `,
     }),
-    ...(ENV === "development"
-      ? []
-      : [new MinifyWebpackPlugin({ filename: "[name].css" })]),
+    ...(ENV === 'development' ? [] : [new MinifyWebpackPlugin({ filename: '[name].css' })]),
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({}),
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
+      template: './src/index.html',
       templateParameters: {
-        env: ENV === "development" ? "(개발용)" : "",
+        env: ENV === 'development' ? '(개발용)' : '',
       },
     }),
   ],
   optimization: {
     minimizer:
-      ENV === "development"
+      ENV === 'development'
         ? []
         : [
             new TerserPlugin({
