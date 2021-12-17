@@ -73,10 +73,7 @@ const DomRenderer = class extends Renderer {
       this.pagination = Pagination.new({ totalImg: length, imgPerPage });
       this.urlStrSaveArr = [];
       this.page.imgArrClear();
-
-      this.moveComponent.reset();
-      this.sizeComponent.reset();
-      this.zoomComponent.reset();
+      [this.moveComponent, this.sizeComponent, this.zoomComponent].forEach((component) => component.reset());
       this.render();
     });
   }
@@ -105,35 +102,23 @@ const DomRenderer = class extends Renderer {
     urlArr.slice(startIdx, startIdx + showImgCnt).forEach((urlStr, cnt) => {
       let image;
       if (this.urlStrSaveArr.includes(urlStr)) {
-        this.page
-          .getItems()
-          .slice(startIdx, startIdx + showImgCnt)
-          .forEach((img, cnt) => {
-            image = img;
-            if (cnt >= imgPerPage) {
-              this.pageRight.addChild(image);
-            } else {
-              this.pageLeft.addChild(image);
-            }
-          });
+        Array.from(this.page.getImg(currentPage)).forEach((img, cnt) => {
+          image = img;
+          this.setAndAddImage({ cnt, imgPerPage, currentPage, image });
+        });
         return;
       } else {
         this.urlStrSaveArr.push(urlStr);
         image = new ImageComponent(urlStr);
       }
-      if (cnt >= imgPerPage) {
-        this.page.addItems(image);
-        this.pageRight.addChild(image);
-      } else {
-        this.page.addItems(image);
-        this.pageLeft.addChild(image);
-      }
+      this.setAndAddImage({ cnt, imgPerPage, currentPage, image });
     });
     const nextPage = this.paginationContainer.querySelector('.next-page') as HTMLButtonElement;
     if (nextPage) {
       nextPage.onclick = () => {
         this.pagination.setState({ currentPage: currentPage + 1 });
         this.render();
+        this.addOrRemoveClassOfBtn();
       };
     }
     const prevPage = this.paginationContainer.querySelector('.prev-page') as HTMLButtonElement;
@@ -141,6 +126,7 @@ const DomRenderer = class extends Renderer {
       prevPage.onclick = () => {
         this.pagination.setState({ currentPage: currentPage - 1 });
         this.render();
+        this.addOrRemoveClassOfBtn();
       };
     }
     this.paginationContainer.onclick = (e: Event) => {
@@ -149,19 +135,20 @@ const DomRenderer = class extends Renderer {
       if (target.tagName === 'SPAN') {
         this.pagination.setState({ currentPage: +target.innerHTML });
         this.render();
+        this.addOrRemoveClassOfBtn();
       }
     };
     this.moveBtn.onclick = () => {
       this.moveComponent.toggle(this.sizeComponent, this.zoomComponent);
-      this.btnReset();
+      this.addOrRemoveClassOfBtn();
     };
     this.sizeBtn.onclick = () => {
       this.sizeComponent.toggle(this.moveComponent, this.zoomComponent);
-      this.btnReset();
+      this.addOrRemoveClassOfBtn();
     };
     this.zoomBtn.onclick = () => {
       this.zoomComponent.toggle(this.sizeComponent, this.moveComponent);
-      this.btnReset();
+      this.addOrRemoveClassOfBtn();
     };
   }
 
@@ -169,8 +156,20 @@ const DomRenderer = class extends Renderer {
     this.pageLeft.reset();
     this.pageRight.reset();
   }
-  private btnReset() {
-    this.page.getItems().forEach((img) => img.move(this.moveComponent.state.isActivated));
+  private addOrRemoveClassOfBtn() {
+    this.page
+      .getAllImg()
+      .flat(1)
+      .forEach((img) => img.move(this.moveComponent.state.isActivated));
+  }
+  private setAndAddImage({ cnt, imgPerPage, currentPage, image }: SetAndAddImage) {
+    if (cnt >= imgPerPage) {
+      this.page.setImg(currentPage, image);
+      this.pageRight.addChild(image);
+    } else {
+      this.page.setImg(currentPage, image);
+      this.pageLeft.addChild(image);
+    }
   }
 };
 

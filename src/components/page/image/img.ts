@@ -1,6 +1,6 @@
 import BaseComponent from '../base/base';
 
-const ImageComponent = class extends BaseComponent<HTMLImageElement> implements ItemComponent {
+const ImageComponent = class extends BaseComponent<HTMLImageElement> implements ImgComponent {
   constructor(imgUrl: string) {
     super(`
           <img class="image__thumbnail">
