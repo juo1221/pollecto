@@ -44,9 +44,7 @@ const DomRenderer = class extends Renderer {
   private moveBtn = document.querySelector('.btn-move') as HTMLButtonElement;
   private sizeBtn = document.querySelector('.btn-size') as HTMLButtonElement;
   private zoomBtn = document.querySelector('.btn-zoom') as HTMLButtonElement;
-  private paginationContainer = document.querySelector(
-    '.pagination-container',
-  ) as HTMLDivElement;
+  private paginationContainer = document.querySelector('.pagination-container') as HTMLDivElement;
 
   constructor(private main: HTMLElement) {
     super();
@@ -74,15 +72,18 @@ const DomRenderer = class extends Renderer {
       }
       this.pagination = Pagination.new({ totalImg: length, imgPerPage });
       this.urlStrSaveArr = [];
-      this.page.reset();
+      this.page.imgArrClear();
+
+      this.moveComponent.reset();
+      this.sizeComponent.reset();
+      this.zoomComponent.reset();
       this.render();
     });
   }
   override _render() {
-    this.pageReset();
+    this.pageLeftRightReset();
     const { currentPage, totalImg, imgPerPage } = this.pagination.getState();
-    const fisrtPage =
-      Math.floor((currentPage - 1) / PAGEDVIDED) * PAGEDVIDED + 1;
+    const fisrtPage = Math.floor((currentPage - 1) / PAGEDVIDED) * PAGEDVIDED + 1;
     const lastPage = fisrtPage + PAGEDVIDED - 1;
     const totalPageCount = Math.ceil(totalImg / (imgPerPage * 2));
     const children = Array.from({ length: totalPageCount }, () => el('span'));
@@ -94,9 +95,7 @@ const DomRenderer = class extends Renderer {
     const html =
       (currentPage > 1 ? `<button class="prev-page"></button>` : '') +
       string +
-      (children.length !== currentPage
-        ? `<button class="next-page"></button>`
-        : '');
+      (children.length !== currentPage ? `<button class="next-page"></button>` : '');
     this.paginationContainer.innerHTML = html;
 
     const { urlArr } = this.dialog.infos;
@@ -130,18 +129,14 @@ const DomRenderer = class extends Renderer {
         this.pageLeft.addChild(image);
       }
     });
-    const nextPage = this.paginationContainer.querySelector(
-      '.next-page',
-    ) as HTMLButtonElement;
+    const nextPage = this.paginationContainer.querySelector('.next-page') as HTMLButtonElement;
     if (nextPage) {
       nextPage.onclick = () => {
         this.pagination.setState({ currentPage: currentPage + 1 });
         this.render();
       };
     }
-    const prevPage = this.paginationContainer.querySelector(
-      '.prev-page',
-    ) as HTMLButtonElement;
+    const prevPage = this.paginationContainer.querySelector('.prev-page') as HTMLButtonElement;
     if (prevPage) {
       prevPage.onclick = () => {
         this.pagination.setState({ currentPage: currentPage - 1 });
@@ -158,22 +153,24 @@ const DomRenderer = class extends Renderer {
     };
     this.moveBtn.onclick = () => {
       this.moveComponent.toggle(this.sizeComponent, this.zoomComponent);
-      this.page.getItems().forEach((img) => {
-        console.log(this.moveComponent.state.isActivated);
-        img.move(this.moveComponent.state.isActivated);
-      });
+      this.btnReset();
     };
     this.sizeBtn.onclick = () => {
       this.sizeComponent.toggle(this.moveComponent, this.zoomComponent);
+      this.btnReset();
     };
     this.zoomBtn.onclick = () => {
       this.zoomComponent.toggle(this.sizeComponent, this.moveComponent);
+      this.btnReset();
     };
   }
 
-  private pageReset() {
+  private pageLeftRightReset() {
     this.pageLeft.reset();
     this.pageRight.reset();
+  }
+  private btnReset() {
+    this.page.getItems().forEach((img) => img.move(this.moveComponent.state.isActivated));
   }
 };
 

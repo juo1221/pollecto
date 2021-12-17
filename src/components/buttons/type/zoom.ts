@@ -14,5 +14,9 @@ const ZoomBtnComponent = class<T extends BtnComponent> extends ButtonComponent {
       if (btn.state.isActivated) btn.toggle();
     });
   }
+  reset() {
+    this.el.classList.remove('activated');
+    this.isActivated = false;
+  }
 };
 export default ZoomBtnComponent;

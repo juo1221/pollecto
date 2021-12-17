@@ -32,7 +32,7 @@ interface Composable {
 interface PageContainer extends Component, Composable {
   addItems(item: ItemComponent): void;
   getItems(): ItemComponent[];
-  reset(): void;
+  imgArrClear(): void;
 }
 interface SectionContainer extends Component, Composable {
   reset(): void;
@@ -50,6 +50,7 @@ interface Pagination {
 }
 interface BtnComponent {
   toggle(...btns: BtnComponent[]): void;
+  reset(): void;
   get state(): BtnComponentState;
 }
 interface ItemComponent extends Component {

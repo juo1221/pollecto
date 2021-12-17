@@ -15,7 +15,7 @@ const PageComponent = class extends BaseComponent<HTMLElement> implements PageCo
   addChild(child: Component) {
     child.attachTo(this.el);
   }
-  reset() {
+  imgArrClear() {
     this.imgArr.clear();
   }
 };
