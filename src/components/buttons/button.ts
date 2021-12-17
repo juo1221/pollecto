@@ -1,6 +1,4 @@
-import { err } from '@Custom/funtions';
-
-const ButtonComponent = class implements BtnComponent {
+const ButtonComponent = class implements Button {
   protected el: HTMLButtonElement;
   protected isActivated: boolean = false;
   constructor(className: string) {
@@ -9,8 +7,19 @@ const ButtonComponent = class implements BtnComponent {
   get state(): BtnComponentState {
     return { isActivated: this.isActivated };
   }
-  toggle() {
-    err('must be overrided!');
+  toggle(...btns: Button[]) {
+    this.resetState(btns);
+    this.el.classList.toggle('activated');
+    this.isActivated = !this.isActivated;
+  }
+  private resetState(btns: Button[]) {
+    btns.forEach((btn) => {
+      if (btn.state.isActivated) btn.toggle();
+    });
+  }
+  reset() {
+    this.el.classList.remove('activated');
+    this.isActivated = false;
   }
 };
 export default ButtonComponent;

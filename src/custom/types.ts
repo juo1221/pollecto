@@ -16,7 +16,7 @@ type BtnComponentState = {
 
 type AddImage = {
   cnt: number;
-  image: ImgComponent;
+  image: Image;
   imgPerPage: number;
 };
 type DialogConstructor = {
@@ -26,7 +26,7 @@ type SetAndAddImage = {
   cnt: number;
   imgPerPage: number;
   currentPage: number;
-  image: ImgComponent;
+  image: Image;
 };
 interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
@@ -36,9 +36,9 @@ interface Composable {
   addChild(child: Component): void;
 }
 interface PageContainer extends Component, Composable {
-  setImg(currentPage: number, img: ImgComponent): void;
-  getImg(currentPage: number): Set<ImgComponent>;
-  getAllImg(): ImgComponent[][];
+  setImg(currentPage: number, img: Image): void;
+  getImg(currentPage: number): Set<Image>;
+  getAllImg(): Image[][];
   imgArrClear(): void;
 }
 interface SectionContainer extends Component, Composable {
@@ -55,11 +55,11 @@ interface Pagination {
   setState(newState: StateParams): void;
   getState(): GetState;
 }
-interface BtnComponent {
-  toggle(...btns: BtnComponent[]): void;
+interface Button {
+  toggle(...btns: Button[]): void;
   reset(): void;
   get state(): BtnComponentState;
 }
-interface ImgComponent extends Component {
+interface Image extends Component {
   move(state: boolean): void;
 }
