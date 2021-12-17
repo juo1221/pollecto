@@ -10,7 +10,6 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
     imgEl.src = imgUrl;
   }
   move(state: boolean) {
-    console.log('움직임등록!');
     if (this.checkState(state)) {
       this.el.classList.add('moving');
     } else {

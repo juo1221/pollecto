@@ -13,9 +13,9 @@ import PageComponent from './components/page/page';
 import PageLeftComponent from './components/page/pageLeft';
 import PageRightComponent from './components/page/pageRight';
 import DialogComponent from './components/page/dialog/dialog';
-import MoveBtnComponent from './components/buttons/move';
-import SizeBtnComponent from './components/buttons/size';
-import ZoomBtnComponent from './components/buttons/zoom';
+import MoveBtnComponent from './components/buttons/type/move';
+import SizeBtnComponent from './components/buttons/type/size';
+import ZoomBtnComponent from './components/buttons/type/zoom';
 import ImageComponent from './components/page/image/img';
 import Pagination from './components/pagination/pagination';
 import { PAGEDVIDED, LIMIT } from './common/constant';
@@ -35,6 +35,7 @@ const DomRenderer = class extends Renderer {
   private pagination: Pagination = Pagination.new();
   private urlStrSaveArr: string[] = [];
   private dialog = new DialogComponent();
+  private page: PageContainer = new PageComponent();
   private pageLeft: SectionContainer = new PageLeftComponent();
   private pageRight: SectionContainer = new PageRightComponent();
   private moveComponent: BtnComponent = new MoveBtnComponent();
@@ -47,10 +48,9 @@ const DomRenderer = class extends Renderer {
 
   constructor(private main: HTMLElement) {
     super();
-    const page = new PageComponent();
-    page.attachTo(this.main);
+    this.page.attachTo(this.main);
     this.dialog.attachTo(document.body);
-    [this.pageLeft, this.pageRight].forEach((v) => page.addChild(v));
+    [this.pageLeft, this.pageRight].forEach((v) => this.page.addChild(v));
     const menuBtn = document.querySelector('.btn-bar');
     menuBtn?.addEventListener('click', () => {
       this.dialog.add();
@@ -100,17 +100,29 @@ const DomRenderer = class extends Renderer {
     urlArr.slice(startIdx, startIdx + showImgCnt).forEach((urlStr, cnt) => {
       let image;
       if (this.urlStrSaveArr.includes(urlStr)) {
-        const savedImageArr = [this.pageLeft.getItems(), this.pageRight.getItems()].flat(1);
-        savedImageArr.slice(startIdx, startIdx + showImgCnt).forEach((img, cnt) => {
-          image = img;
-          this.addImage({ cnt, image, imgPerPage });
-        });
+        this.page
+          .getItems()
+          .slice(startIdx, startIdx + showImgCnt)
+          .forEach((img, cnt) => {
+            image = img;
+            if (cnt >= imgPerPage) {
+              this.pageRight.addChild(image);
+            } else {
+              this.pageLeft.addChild(image);
+            }
+          });
         return;
       } else {
         this.urlStrSaveArr.push(urlStr);
         image = new ImageComponent(urlStr);
       }
-      this.addImage({ cnt, image, imgPerPage });
+      if (cnt >= imgPerPage) {
+        this.page.addItems(image);
+        this.pageRight.addChild(image);
+      } else {
+        this.page.addItems(image);
+        this.pageLeft.addChild(image);
+      }
     });
     const nextPage = this.paginationContainer.querySelector('.next-page') as HTMLButtonElement;
     if (nextPage) {
@@ -135,27 +147,22 @@ const DomRenderer = class extends Renderer {
       }
     };
     this.moveBtn.onclick = () => {
-      this.moveComponent.toggle();
-      [this.pageLeft.getItems(), this.pageRight.getItems()]
-        .flat(1)
-        .forEach((img) => img.move(this.moveComponent.state.isActivated));
+      this.moveComponent.toggle(this.sizeComponent, this.zoomComponent);
+      this.page.getItems().forEach((img) => {
+        console.log(this.moveComponent.state.isActivated);
+        img.move(this.moveComponent.state.isActivated);
+      });
     };
     this.sizeBtn.onclick = () => {
-      this.sizeComponent.toggle();
+      this.sizeComponent.toggle(this.moveComponent, this.zoomComponent);
     };
     this.zoomBtn.onclick = () => {
-      this.zoomComponent.toggle();
+      this.zoomComponent.toggle(this.sizeComponent, this.moveComponent);
     };
   }
-  private addImage({ cnt, image, imgPerPage }: AddImage) {
-    if (cnt >= imgPerPage) {
-      this.pageRight.addItems(image);
-      this.pageRight.addChild(image);
-    } else {
-      this.pageLeft.addItems(image);
-      this.pageLeft.addChild(image);
-    }
-  }
+  // private addImage({ cnt, image, imgPerPage }: AddImage) {
+
+  // }
   private pageReset() {
     this.pageLeft.reset();
     this.pageRight.reset();

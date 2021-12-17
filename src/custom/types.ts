@@ -29,9 +29,11 @@ interface Component {
 interface Composable {
   addChild(child: Component): void;
 }
-interface SectionContainer extends Component, Composable {
+interface PageContainer extends Component, Composable {
   addItems(item: ItemComponent): void;
   getItems(): ItemComponent[];
+}
+interface SectionContainer extends Component, Composable {
   reset(): void;
 }
 interface Dialog {
@@ -46,7 +48,7 @@ interface Pagination {
   getState(): GetState;
 }
 interface BtnComponent {
-  toggle(): void;
+  toggle(...btns: BtnComponent[]): void;
   get state(): BtnComponentState;
 }
 interface ItemComponent extends Component {
