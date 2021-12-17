@@ -127,12 +127,14 @@ body {
       justify-items: center;
       width: 50%;
       border-right: 1px dashed $color-black;
+      overflow: hidden;
     }
     .page-right {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       justify-items: center;
       width: 50%;
+      overflow: hidden;
     }
   }
   .pagination-container {
@@ -305,7 +307,9 @@ body {
 // 1653.5px * 2338.6px
 
 .image__thumbnail {
+  position: relative;
   width: 75%;
+  transform: translate(0, 0);
 }
 .moving {
   cursor: move;

@@ -306,6 +306,7 @@ body {
   justify-items: center;
   width: 50%;
   border-right: 1px dashed #002;
+  overflow: hidden;
 }
 
 .main .page-container .page-right {
@@ -315,6 +316,7 @@ body {
       grid-template-columns: repeat(2, 1fr);
   justify-items: center;
   width: 50%;
+  overflow: hidden;
 }
 
 .main .pagination-container {
@@ -572,7 +574,10 @@ body {
 }
 
 .image__thumbnail {
+  position: relative;
   width: 75%;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
 }
 
 .moving {

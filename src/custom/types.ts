@@ -61,5 +61,6 @@ interface Button {
   get state(): BtnComponentState;
 }
 interface Image extends Component {
+  addOrRemoveMovingClass(state: boolean): void;
   move(state: boolean): void;
 }

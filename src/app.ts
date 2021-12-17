@@ -118,7 +118,7 @@ const DomRenderer = class extends Renderer {
       nextPage.onclick = () => {
         this.pagination.setState({ currentPage: currentPage + 1 });
         this.render();
-        this.addOrRemoveClassOfBtn();
+        this.addOrRemoveClassOfBtnAndActivate();
       };
     }
     const prevPage = this.paginationContainer.querySelector('.prev-page') as HTMLButtonElement;
@@ -126,7 +126,7 @@ const DomRenderer = class extends Renderer {
       prevPage.onclick = () => {
         this.pagination.setState({ currentPage: currentPage - 1 });
         this.render();
-        this.addOrRemoveClassOfBtn();
+        this.addOrRemoveClassOfBtnAndActivate();
       };
     }
     this.paginationContainer.onclick = (e: Event) => {
@@ -135,20 +135,20 @@ const DomRenderer = class extends Renderer {
       if (target.tagName === 'SPAN') {
         this.pagination.setState({ currentPage: +target.innerHTML });
         this.render();
-        this.addOrRemoveClassOfBtn();
+        this.addOrRemoveClassOfBtnAndActivate();
       }
     };
     this.moveBtn.onclick = () => {
       this.moveComponent.toggle(this.sizeComponent, this.zoomComponent);
-      this.addOrRemoveClassOfBtn();
+      this.addOrRemoveClassOfBtnAndActivate();
     };
     this.sizeBtn.onclick = () => {
       this.sizeComponent.toggle(this.moveComponent, this.zoomComponent);
-      this.addOrRemoveClassOfBtn();
+      this.addOrRemoveClassOfBtnAndActivate();
     };
     this.zoomBtn.onclick = () => {
       this.zoomComponent.toggle(this.sizeComponent, this.moveComponent);
-      this.addOrRemoveClassOfBtn();
+      this.addOrRemoveClassOfBtnAndActivate();
     };
   }
 
@@ -156,11 +156,14 @@ const DomRenderer = class extends Renderer {
     this.pageLeft.reset();
     this.pageRight.reset();
   }
-  private addOrRemoveClassOfBtn() {
+  private addOrRemoveClassOfBtnAndActivate() {
     this.page
       .getAllImg()
       .flat(1)
-      .forEach((img) => img.move(this.moveComponent.state.isActivated));
+      .forEach((img) => {
+        img.addOrRemoveMovingClass(this.moveComponent.state.isActivated);
+        img.move(this.moveComponent.state.isActivated);
+      });
   }
   private setAndAddImage({ cnt, imgPerPage, currentPage, image }: SetAndAddImage) {
     if (cnt >= imgPerPage) {
