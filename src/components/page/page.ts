@@ -9,11 +9,14 @@ const PageComponent = class extends BaseComponent<HTMLElement> implements PageCo
     this.imgArr.add(item);
   }
   getItems(): ItemComponent[] {
-    console.log('left ', Array.from(this.imgArr));
+    console.log('저장소', Array.from(this.imgArr));
     return Array.from(this.imgArr);
   }
   addChild(child: Component) {
     child.attachTo(this.el);
+  }
+  reset() {
+    this.imgArr.clear();
   }
 };
 

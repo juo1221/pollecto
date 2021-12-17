@@ -32,6 +32,7 @@ interface Composable {
 interface PageContainer extends Component, Composable {
   addItems(item: ItemComponent): void;
   getItems(): ItemComponent[];
+  reset(): void;
 }
 interface SectionContainer extends Component, Composable {
   reset(): void;
