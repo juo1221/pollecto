@@ -148,7 +148,6 @@ const DomRenderer = class extends Renderer {
     };
     this.zoomBtn.onclick = () => {
       this.zoomComponent.toggleAndRemove();
-      this.main.classList.toggle('zooming');
       this.zoomComponent.state.isActivated ? this.startZoom() : this.endZoom();
     };
   }
@@ -200,6 +199,7 @@ const DomRenderer = class extends Renderer {
     }
   }
   private startZoom() {
+    this.main.classList.add('zooming');
     this.main.onwheel = (e: WheelEvent) => {
       e.preventDefault();
       if (e.deltaY < 0) {
@@ -210,6 +210,7 @@ const DomRenderer = class extends Renderer {
     };
   }
   private endZoom() {
+    this.main.classList.remove('zooming');
     this.main.onwheel = null;
   }
 };
