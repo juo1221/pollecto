@@ -28,6 +28,7 @@ type SetAndAddImage = {
   currentPage: number;
   image: Image;
 };
+type MethodName = 'move' | 'size' | 'zoom';
 interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
   removeFrom(parent: HTMLElement): void;
@@ -62,5 +63,7 @@ interface Button {
 }
 interface Image extends Component {
   addOrRemoveMovingClass(state: boolean): void;
+  addOrRemoveSizingClass(state: boolean): void;
   move(state: boolean): void;
+  size(state: boolean): void;
 }

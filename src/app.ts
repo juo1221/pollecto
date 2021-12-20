@@ -118,7 +118,7 @@ const DomRenderer = class extends Renderer {
       nextPage.onclick = () => {
         this.pagination.setState({ currentPage: currentPage + 1 });
         this.render();
-        this.addOrRemoveClassOfBtnAndActivate();
+        this.checkAllOfClass();
       };
     }
     const prevPage = this.paginationContainer.querySelector('.prev-page') as HTMLButtonElement;
@@ -126,7 +126,7 @@ const DomRenderer = class extends Renderer {
       prevPage.onclick = () => {
         this.pagination.setState({ currentPage: currentPage - 1 });
         this.render();
-        this.addOrRemoveClassOfBtnAndActivate();
+        this.checkAllOfClass();
       };
     }
     this.paginationContainer.onclick = (e: Event) => {
@@ -135,20 +135,20 @@ const DomRenderer = class extends Renderer {
       if (target.tagName === 'SPAN') {
         this.pagination.setState({ currentPage: +target.innerHTML });
         this.render();
-        this.addOrRemoveClassOfBtnAndActivate();
+        this.checkAllOfClass();
       }
     };
     this.moveBtn.onclick = () => {
       this.moveComponent.toggle(this.sizeComponent, this.zoomComponent);
-      this.addOrRemoveClassOfBtnAndActivate();
+      this.checkAllOfClassAndAddMoveEvent();
     };
     this.sizeBtn.onclick = () => {
       this.sizeComponent.toggle(this.moveComponent, this.zoomComponent);
-      this.addOrRemoveClassOfBtnAndActivate();
+      this.checkAllOfClassAndAddSizeEvent();
     };
     this.zoomBtn.onclick = () => {
       this.zoomComponent.toggle(this.sizeComponent, this.moveComponent);
-      this.addOrRemoveClassOfBtnAndActivate();
+      // this.addOrRemoveClassOfZoomAndActivate();
     };
   }
 
@@ -156,15 +156,65 @@ const DomRenderer = class extends Renderer {
     this.pageLeft.reset();
     this.pageRight.reset();
   }
-  private addOrRemoveClassOfBtnAndActivate() {
+  private checkAllOfClass() {
     this.page
       .getAllImg()
       .flat(1)
       .forEach((img) => {
         img.addOrRemoveMovingClass(this.moveComponent.state.isActivated);
+        img.addOrRemoveSizingClass(this.sizeComponent.state.isActivated);
+        this.moveComponent.state.isActivated && img.move(this.moveComponent.state.isActivated);
+        this.sizeComponent.state.isActivated && img.size(this.sizeComponent.state.isActivated);
+
+        // img.addOrRemoveZoomingClass(this.zoomComponent.state.isActivated);
+      });
+  }
+  private checkAllOfClassAndAddMoveEvent() {
+    this.page
+      .getAllImg()
+      .flat(1)
+      .forEach((img) => {
+        img.addOrRemoveMovingClass(this.moveComponent.state.isActivated);
+        img.addOrRemoveSizingClass(this.sizeComponent.state.isActivated);
         img.move(this.moveComponent.state.isActivated);
       });
   }
+  private checkAllOfClassAndAddSizeEvent() {
+    this.page
+      .getAllImg()
+      .flat(1)
+      .forEach((img) => {
+        img.addOrRemoveMovingClass(this.moveComponent.state.isActivated);
+        img.addOrRemoveSizingClass(this.sizeComponent.state.isActivated);
+        img.size(this.sizeComponent.state.isActivated);
+      });
+  }
+  // private addOrRemoveEventListnerOfMove() {
+  //   this.page
+  //     .getAllImg()
+  //     .flat(1)
+  //     .forEach((img) => {
+  //       img.move(this.moveComponent.state.isActivated);
+  //     });
+  // }
+  // private addOrRemoveClassOfSizeAndActivate() {
+  //   this.page
+  //     .getAllImg()
+  //     .flat(1)
+  //     .forEach((img) => {
+  //       img.addOrRemoveSizingClass(this.sizeComponent.state.isActivated);
+  //       img.size(this.sizeComponent.state.isActivated);
+  //     });
+  // }
+  // private addOrRemoveClassOfZoomAndActivate() {
+  //   this.page
+  //     .getAllImg()
+  //     .flat(1)
+  //     .forEach((img) => {
+  //       img.addOrRemoveZoomingClass(this.zoomComponent.state.isActivated);
+  //       img.zoom(this.zoomComponent.state.isActivated);
+  //     });
+  // }
   private setAndAddImage({ cnt, imgPerPage, currentPage, image }: SetAndAddImage) {
     if (cnt >= imgPerPage) {
       this.page.setImg(currentPage, image);

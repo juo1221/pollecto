@@ -314,6 +314,9 @@ body {
 .moving {
   cursor: move;
 }
+.sizing {
+  cursor: ns-resize;
+}
 
 .dialog--active {
 }

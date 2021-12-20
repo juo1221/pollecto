@@ -1,6 +1,7 @@
 import BaseComponent from '../base/base';
 import { err } from '@Custom/funtions';
 const ImageComponent = class extends BaseComponent<HTMLImageElement> implements Image {
+  private handlers: Map<MethodName, any[]> = new Map();
   constructor(imgUrl: string) {
     super(`
           <img class="image__thumbnail" >
@@ -16,40 +17,70 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
       this.el.classList.remove('moving');
     }
   }
-  move(state: boolean) {
+  addOrRemoveSizingClass(state: boolean) {
+    if (this.checkState(state)) {
+      this.el.classList.add('sizing');
+    } else {
+      this.el.classList.remove('sizing');
+    }
+  }
+  addOrRemoveLisener(state: boolean, listener: any) {
     if (!this.checkState(state)) {
-      this.el.removeEventListener('mousedown', this.addMouseEvent);
+      this.el.onmousedown = null;
       return;
     }
-    this.el.addEventListener('mousedown', this.addMouseEvent);
+    this.el.onmousedown = listener;
   }
-  private addMouseEvent(e: MouseEvent): void {
-    e.preventDefault();
-    const target = e.target as HTMLImageElement;
-    const clientX = e.clientX;
-    const clientY = e.clientY;
-    const matrix = window.getComputedStyle(target).transform;
-    const matrixStringArr = matrix.match(/matrix.*\((.+)\)/) as string[];
-    if (!matrixStringArr[1]) err('maxtrix값이 없습니다!');
+  move(state: boolean) {
+    const methodName = 'move';
+    if (!this.handlers.has(methodName)) {
+      this.handlers.set(methodName, [this.gogo(methodName)]);
+    }
+    this.addOrRemoveLisener(state, this.handlers.get(methodName)?.at(-1));
+  }
+  size(state: boolean) {
+    const methodName = 'size';
+    if (!this.handlers.has(methodName)) {
+      this.handlers.set(methodName, [this.gogo(methodName)]);
+    }
+    this.addOrRemoveLisener(state, this.handlers.get(methodName)?.at(-1));
+  }
+  private gogo(methodName: MethodName) {
+    return function addMouseEvent(e: MouseEvent): void {
+      e.preventDefault();
+      const target = e.target as HTMLImageElement;
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+      const matrix = window.getComputedStyle(target).transform;
+      const matrixStringArr = matrix.match(/matrix.*\((.+)\)/) as string[];
+      if (!matrixStringArr[1]) err('matrix값이 없습니다!');
 
-    const x = matrixStringArr[1]?.split(', ')[4];
-    const y = matrixStringArr[1]?.split(', ')[5];
+      const x = matrixStringArr[1]?.split(', ')[4];
+      const y = matrixStringArr[1]?.split(', ')[5];
 
-    const imagePositionLeft = Number(x) - clientX;
-    let offsetX: number;
-    const imagePostionTop = Number(y) - clientY;
-    let offsetY: number;
+      const imagePositionLeft = Number(x) - clientX;
+      const imagePostionTop = Number(y) - clientY;
 
-    document.onmousemove = (e: MouseEvent) => {
-      offsetX = imagePositionLeft + e.clientX;
-      offsetY = imagePostionTop + e.clientY;
-      target.style.transform = `translate(${offsetX}px,${offsetY}px )`;
-    };
-    document.onmouseup = () => {
-      document.onmousemove = null;
-      document.onmouseup = null;
+      if (methodName === 'move') {
+        document.onmousemove = (e: MouseEvent) => {
+          const offsetX = imagePositionLeft + e.clientX;
+          const offsetY = imagePostionTop + e.clientY;
+          target.style.transform = `translate(${offsetX}px,${offsetY}px )`;
+        };
+      } else {
+        const imgheight = Number(target.height);
+        document.onmousemove = (e: MouseEvent) => {
+          const offsetY = imagePostionTop + e.clientY;
+          target.height = imgheight + offsetY; // height 최적화 필요
+        };
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
     };
   }
+
   private checkState(state: boolean): boolean {
     return state === true;
   }
