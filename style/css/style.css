@@ -282,6 +282,7 @@ body {
       -ms-flex-pack: center;
           justify-content: center;
   position: relative;
+  text-align: center;
 }
 
 .main .page-container {
@@ -289,13 +290,14 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin-top: 40px;
-  width: 2392px;
-  min-width: 2392px;
-  height: 1683px;
+  width: 1800px;
+  min-width: 1800px;
+  height: 1267px;
   border: 1px solid #002;
   text-align: center;
   overflow: hidden;
+  margin: auto;
+  margin-bottom: 100px;
 }
 
 .main .page-container .page-left {
@@ -321,10 +323,7 @@ body {
 
 .main .pagination-container {
   position: absolute;
-  bottom: 0;
-  -webkit-transform: translateY(80px);
-          transform: translateY(80px);
-  padding-bottom: 30px;
+  bottom: 30px;
 }
 
 .main .pagination-container span {
@@ -586,6 +585,11 @@ body {
 
 .sizing {
   cursor: ns-resize;
+}
+
+.zooming {
+  cursor: -webkit-zoom-in;
+  cursor: zoom-in;
 }
 
 @media screen and (min-width: 1024px) {

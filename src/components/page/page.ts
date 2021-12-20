@@ -14,7 +14,6 @@ const PageComponent = class extends BaseComponent<HTMLElement> implements PageCo
     }
   }
   getImg(currentPage: number): Set<Image> {
-    console.log(this.imgMap);
     if (!this.imgMap.has(currentPage)) {
       return err('저장된 이미지가 없습니다.');
     } else {
@@ -33,6 +32,12 @@ const PageComponent = class extends BaseComponent<HTMLElement> implements PageCo
   }
   imgArrClear() {
     this.imgMap.clear();
+  }
+  zoomIn(): void {
+    this.el.style.transform = `scale(1.0)`;
+  }
+  zoomOut(): void {
+    this.el.style.transform = `scale(0.7)`;
   }
 };
 

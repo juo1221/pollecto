@@ -24,6 +24,7 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
       this.el.classList.remove('sizing');
     }
   }
+
   addOrRemoveLisener(state: boolean, listener: any) {
     if (!this.checkState(state)) {
       this.el.onmousedown = null;
@@ -34,18 +35,19 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
   move(state: boolean) {
     const methodName = 'move';
     if (!this.handlers.has(methodName)) {
-      this.handlers.set(methodName, [this.gogo(methodName)]);
+      this.handlers.set(methodName, [this.getListener(methodName)]);
     }
     this.addOrRemoveLisener(state, this.handlers.get(methodName)?.at(-1));
   }
   size(state: boolean) {
     const methodName = 'size';
     if (!this.handlers.has(methodName)) {
-      this.handlers.set(methodName, [this.gogo(methodName)]);
+      this.handlers.set(methodName, [this.getListener(methodName)]);
     }
     this.addOrRemoveLisener(state, this.handlers.get(methodName)?.at(-1));
   }
-  private gogo(methodName: MethodName) {
+
+  private getListener(methodName: MethodName) {
     return function addMouseEvent(e: MouseEvent): void {
       e.preventDefault();
       const target = e.target as HTMLImageElement;
@@ -59,7 +61,7 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
       const y = matrixStringArr[1]?.split(', ')[5];
 
       const imagePositionLeft = Number(x) - clientX;
-      const imagePostionTop = Number(y) - clientY;
+      let imagePostionTop = Number(y) - clientY;
 
       if (methodName === 'move') {
         document.onmousemove = (e: MouseEvent) => {
@@ -69,6 +71,7 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
         };
       } else {
         const imgheight = Number(target.height);
+        imagePostionTop = -e.clientY;
         document.onmousemove = (e: MouseEvent) => {
           const offsetY = imagePostionTop + e.clientY;
           target.height = imgheight + offsetY; // height 최적화 필요

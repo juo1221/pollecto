@@ -7,14 +7,14 @@ const ButtonComponent = class implements Button {
   get state(): BtnComponentState {
     return { isActivated: this.isActivated };
   }
-  toggle(...btns: Button[]) {
+  toggleAndRemove(...btns: Button[]) {
     this.resetState(btns);
     this.el.classList.toggle('activated');
     this.isActivated = !this.isActivated;
   }
   private resetState(btns: Button[]) {
     btns.forEach((btn) => {
-      if (btn.state.isActivated) btn.toggle();
+      if (btn.state.isActivated) btn.reset();
     });
   }
   reset() {
