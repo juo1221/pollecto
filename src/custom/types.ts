@@ -46,6 +46,7 @@ interface PageContainer extends Component, Composable {
 }
 interface SectionContainer extends Component, Composable {
   reset(): void;
+  getChildren(): Element | null;
 }
 interface Dialog {
   get infos(): Infos;

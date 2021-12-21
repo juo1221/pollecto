@@ -10,6 +10,10 @@ const PageLeftComponent = class extends BaseComponent<HTMLElement> implements Se
   reset() {
     this.el.innerHTML = '';
   }
+  getChildren(): Element | null {
+    if (this.el.children.length) return this.el;
+    else return null;
+  }
 };
 
 export default PageLeftComponent;

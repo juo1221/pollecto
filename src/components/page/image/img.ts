@@ -4,10 +4,12 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
   private handlers: Map<MethodName, any[]> = new Map();
   constructor(imgUrl: string) {
     super(`
+        <div class="image-container">
           <img class="image__thumbnail" >
+        </div>
       `);
 
-    const imgEl = this.el as HTMLImageElement;
+    const imgEl = this.el.querySelector('.image__thumbnail') as HTMLImageElement;
     imgEl.src = imgUrl;
   }
   addOrRemoveMovingClass(state: boolean) {

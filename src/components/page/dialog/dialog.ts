@@ -1,6 +1,9 @@
 import BaseComponent from '../base/base';
 import { err, el } from '@Custom/funtions';
 import { LIMIT } from '@Common/constant';
+// import * as html2pdf from 'html2pdf.js';
+
+// const element = document.querySelector('#element');
 
 const DialogComponent = class extends BaseComponent<HTMLElement> implements Dialog {
   private urlArr: string[] = [];
@@ -93,6 +96,10 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
         this.validate();
       };
     });
+
+    const exportBtn = this.el.querySelector('.btn-export') as HTMLButtonElement;
+    exportBtn.addEventListener('click', () => {});
+
     const input = this.el.querySelector('.imgPerCnt') as HTMLInputElement;
     input.onchange = () => {
       this.validate();
@@ -109,6 +116,9 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
   }
   get renderBtn(): HTMLElement {
     return this.el.querySelector('.btn-play') as HTMLButtonElement;
+  }
+  get pdfBtn(): HTMLElement {
+    return this.el.querySelector('.btn-export') as HTMLButtonElement;
   }
   add() {
     document.body.classList.toggle('dialog--active');

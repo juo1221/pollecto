@@ -7,7 +7,7 @@
 //   //   resultEl.innerHTML = await result.render();
 //   // });
 // }
-
+import * as html2pdf from 'html2pdf.js';
 import '../style/css/style.css';
 import PageComponent from './components/page/page';
 import PageLeftComponent from './components/page/pageLeft';
@@ -80,6 +80,7 @@ const DomRenderer = class extends Renderer {
   override _render() {
     this.pageLeftRightReset();
     const { currentPage, totalImg, imgPerPage } = this.pagination.getState();
+
     const fisrtPage = Math.floor((currentPage - 1) / PAGEDVIDED) * PAGEDVIDED + 1;
     const lastPage = fisrtPage + PAGEDVIDED - 1;
     const totalPageCount = Math.ceil(totalImg / (imgPerPage * 2));
@@ -150,6 +151,33 @@ const DomRenderer = class extends Renderer {
       this.zoomComponent.toggleAndRemove();
       this.zoomComponent.state.isActivated ? this.startZoom() : this.endZoom();
     };
+
+    const pdfBtn = this.dialog.pdfBtn;
+    pdfBtn.addEventListener('click', () => {
+      const element = document.querySelector('#element') as HTMLUListElement;
+      element.innerHTML = '';
+      for (let i = 0; i < totalPageCount; i++) {
+        const imgArr = [this.pageLeft.getChildren(), this.pageRight.getChildren()];
+        imgArr.forEach((item) => {
+          if (item) {
+            const cloneItem = item.cloneNode(true);
+            element.appendChild(cloneItem);
+            const divEl = element.appendChild(el('div'));
+            divEl.appendChild(cloneItem);
+          }
+        });
+        const nextBtn = document.querySelector('.next-page') as HTMLButtonElement;
+        nextBtn?.click();
+      }
+      html2pdf()
+        .from(element)
+        .set({
+          filename: 'file.pdf',
+          html2canvas: { scale: 2, logging: true, dpi: 200, letterRendering: true },
+          jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
+        })
+        .save();
+    });
   }
 
   private pageLeftRightReset() {

@@ -10,5 +10,9 @@ const PageRightComponent = class extends BaseComponent<HTMLElement> implements S
   reset() {
     this.el.innerHTML = '';
   }
+  getChildren(): Element | null {
+    if (this.el.children.length) return this.el;
+    else return null;
+  }
 };
 export default PageRightComponent;
