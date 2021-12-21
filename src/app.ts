@@ -153,8 +153,9 @@ const DomRenderer = class extends Renderer {
     };
 
     const pdfBtn = this.dialog.pdfBtn;
-    pdfBtn.addEventListener('click', () => {
+    pdfBtn.onclick = async () => {
       const element = document.querySelector('#element') as HTMLUListElement;
+      element.style.display = 'block';
       element.innerHTML = '';
       for (let i = 0; i < totalPageCount; i++) {
         const imgArr = [this.pageLeft.getChildren(), this.pageRight.getChildren()];
@@ -169,15 +170,19 @@ const DomRenderer = class extends Renderer {
         const nextBtn = document.querySelector('.next-page') as HTMLButtonElement;
         nextBtn?.click();
       }
-      html2pdf()
-        .from(element)
-        .set({
-          filename: 'file.pdf',
-          html2canvas: { scale: 2, logging: true, dpi: 200, letterRendering: true },
-          jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
-        })
-        .save();
-    });
+      await (async () => {
+        new html2pdf()
+          .from(element)
+          .set({
+            filename: 'file.pdf',
+            html2canvas: { scale: 2, logging: true, dpi: 200, letterRendering: true },
+            jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
+          })
+          .save();
+      })();
+
+      element.style.display = 'none';
+    };
   }
 
   private pageLeftRightReset() {
