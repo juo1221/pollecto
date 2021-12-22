@@ -51,14 +51,14 @@ const DomRenderer = class extends Renderer {
     this.page.attachTo(this.main);
     this.dialog.attachTo(document.body);
     [this.pageLeft, this.pageRight].forEach((v) => this.page.addChild(v));
+
+    const closeBtn = document.querySelector('.btn-close');
+    if (closeBtn instanceof HTMLButtonElement) {
+      closeBtn.onclick = () => this.dialog.close();
+    }
     const menuBtn = document.querySelector('.btn-bar');
-    menuBtn?.addEventListener('click', () => {
-      this.dialog.add();
-      const closeBtn = document.querySelector('.btn-close');
-      if (closeBtn instanceof HTMLButtonElement) {
-        closeBtn.onclick = () => this.dialog.close();
-      }
-    });
+    menuBtn?.addEventListener('click', () => this.dialog.add());
+
     const renderBtn = this.dialog.renderBtn;
     renderBtn.addEventListener('click', () => {
       const {
@@ -170,6 +170,11 @@ const DomRenderer = class extends Renderer {
         const nextBtn = document.querySelector('.next-page') as HTMLButtonElement;
         nextBtn?.click();
       }
+
+      await (async () => {
+        const lodding = document.querySelector('.loader') as HTMLElement;
+        lodding.style.display = 'block';
+      })();
       await (async () => {
         new html2pdf()
           .from(element)
@@ -180,7 +185,7 @@ const DomRenderer = class extends Renderer {
           })
           .save();
       })();
-
+      // lodding.style.display = 'none';
       element.style.display = 'none';
     };
   }

@@ -2,7 +2,6 @@ import BaseComponent from '../base/base';
 import { err, el } from '@Custom/funtions';
 import { LIMIT } from '@Common/constant';
 // import * as html2pdf from 'html2pdf.js';
-
 // const element = document.querySelector('#element');
 
 const DialogComponent = class extends BaseComponent<HTMLElement> implements Dialog {
@@ -121,10 +120,10 @@ const DialogComponent = class extends BaseComponent<HTMLElement> implements Dial
     return this.el.querySelector('.btn-export') as HTMLButtonElement;
   }
   add() {
-    document.body.classList.toggle('dialog--active');
+    document.body.classList.remove('dialog--active');
   }
   close() {
-    document.body.classList.toggle('dialog--active');
+    document.body.classList.add('dialog--active');
   }
   private convertFileToString(imgUrls: File[]) {
     return Promise.all(imgUrls.map((url) => this.readAsDataUrl(url)));
