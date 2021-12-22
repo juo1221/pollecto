@@ -10,7 +10,7 @@ $color-white: #ffffff;
 $color-black: #002;
 $color-page-liner: #7a83c1;
 $color-center-liner: #59638a;
-$color-blue: #0934e2;
+$color-blue: #7c8ac4;
 
 //width
 $width-img-container: 1322.42px;
@@ -48,13 +48,22 @@ $animation-duration: 300ms;
   margin-left: $width-space * $marginL;
   font-size: $width-icon / $fontSize;
   cursor: pointer;
+  @media screen and (max-width: 1024px) {
+    width: $width-icon * $width / 1.5;
+    height: $height-icon * $height / 1.5;
+    margin-top: $height-space * $marginT / 1.5;
+    margin-left: $width-space * $marginL / 1.5;
+    font-size: 16px;
+  }
 }
 @mixin colorBtn($color) {
   background: $color-white;
   border: 5px solid $color;
   border-radius: $border-half;
+  @media screen and (max-width: 1024px) {
+    border: 3px solid $color;
+  }
 }
-
 body {
   background-color: $color-white;
   position: relative;
@@ -63,17 +72,26 @@ body {
 .header {
   @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
   background-color: $color-header;
-  height: 92px;
+  height: $height-space * 11.5;
   box-shadow: 0px 2px 2px 2px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   text-align: center;
+  @media screen and (max-width: 1024px) {
+    box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+    height: $height-space * 10;
+  }
   &-title {
     margin-left: $width-space;
     font-family: Rubik Mono One;
     font-weight: $weight-regular;
     font-size: $font-title;
     line-height: 37px;
+    @media screen and (max-width: 1024px) {
+      font-weight: none;
+      font-size: $font-title / 1.5;
+      line-height: 30px;
+    }
   }
 }
 .buttons {
@@ -123,8 +141,14 @@ body {
     text-align: center;
     overflow: hidden;
     margin: auto;
-    margin-bottom: 100px;
+    margin-bottom: $height-space * 12.5;
     transition: all 0.3s linear;
+    @media screen and (max-width: 1024px) {
+      width: 210mm;
+      min-width: 210mm;
+      height: 149mm;
+      margin-top: $height-space * 5;
+    }
     .page-left {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -177,22 +201,34 @@ body {
   background-color: $color-dialog;
   border-radius: 20px 0px 0px 20px;
   transition: all 500ms ease-in-out;
+  @media screen and (max-width: 1024px) {
+    width: 35%;
+    height: 50%;
+    right: -35%;
+    top: 80px;
+  }
   .dialog-top {
     display: flex;
     margin: $height-space $width-space;
     padding: $height-space $width-space;
     align-items: baseline;
+    @media screen and (max-width: 1024px) {
+      margin: $height-space $width-space / 1.5;
+      padding: $height-space $width-space / 1.5;
+    }
     .title {
       font-size: $font-title;
       flex-grow: 1;
       color: $color-white;
+      @media screen and (max-width: 1024px) {
+        font-size: $font-title / 1.5;
+      }
     }
     .top-buttons {
       flex-grow: 20;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-
       .btn-export,
       .btn-close {
         @include customBtn(1, 1, 0, 0, 2);
@@ -245,12 +281,22 @@ body {
         .btn-remove {
           cursor: pointer;
         }
+        @media screen and (max-width: 1024px) {
+          margin-top: $height-space / 1.5;
+          border-radius: $border-radius / 1.5;
+          height: 200px;
+          font-size: $font-title / 1.5 / 1.5;
+        }
       }
       .list {
         display: flex;
         justify-content: space-between;
         margin: $width-space * 2;
         padding: $width-space;
+        @media screen and (max-width: 1024px) {
+          margin: $width-space * 2 / 1.5;
+          padding: $width-space / 1.5;
+        }
       }
     }
     .dialog-options {
@@ -264,6 +310,12 @@ body {
       margin-top: $height-space * 5;
       font-size: $font-title/1.3;
       color: $color-white;
+      @media screen and (max-width: 1024px) {
+        gap: $height-space * 4 / 1.5;
+        padding: $width-space * 8 / 2;
+        font-size: $font-title / 1.3 / 1.5;
+        margin-top: $height-space * 5 / 1.5;
+      }
       .option-title {
         position: absolute;
         font-size: $font-title * 1.1;
@@ -274,6 +326,13 @@ body {
         background-color: $color-dialog;
         padding: 0 $width-space;
         font-weight: $weight-semi-bold;
+        @media screen and (max-width: 1024px) {
+          font-size: $font-title * 1.1 / 1.5;
+          letter-spacing: 3px / 1.5;
+          top: -$font-title / 2 / 1.5;
+          padding: 0 $width-space / 1.5;
+          font-weight: $weight-semi-bold / 1.5;
+        }
       }
       .imgPerCnt {
         text-align: center;
@@ -298,12 +357,19 @@ body {
     .dialog-start {
       margin-top: $height-space * 3;
       text-align: center;
+      @media screen and (max-width: 1024px) {
+        margin-top: $height-space * 3 / 1.5;
+      }
       .btn-play {
         @include customBtn(2, 2, 0, 0, 1);
         color: $color-white;
       }
     }
   }
+}
+
+.dialog--active .dialog {
+  transform: translateX(-100%);
 }
 
 // 200dpi a4(201*297mm)
@@ -348,11 +414,5 @@ body {
     grid-template-columns: repeat(2, 1fr);
     justify-items: center;
     overflow: hidden;
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .dialog--active .dialog {
-    transform: translateX(-100%);
   }
 }

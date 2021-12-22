@@ -209,12 +209,28 @@ body {
   text-align: center;
 }
 
+@media screen and (max-width: 1024px) {
+  .header {
+    -webkit-box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+    height: 80px;
+  }
+}
+
 .header-title {
   margin-left: 12px;
   font-family: Rubik Mono One;
   font-weight: 400;
   font-size: 30px;
   line-height: 37px;
+}
+
+@media screen and (max-width: 1024px) {
+  .header-title {
+    font-weight: none;
+    font-size: 20px;
+    line-height: 30px;
+  }
 }
 
 .buttons {
@@ -245,6 +261,22 @@ body {
           align-items: center;
 }
 
+@media screen and (max-width: 1024px) {
+  .buttons .btn {
+    width: 33.33333px;
+    height: 33.33333px;
+    margin-top: 16px;
+    margin-left: 8px;
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .buttons .btn {
+    border: 3px solid #ffe08f;
+  }
+}
+
 .buttons .btn:nth-last-child(1) {
   position: absolute;
   right: 0;
@@ -268,10 +300,16 @@ body {
 
 .buttons .activated {
   background: #ffffff;
-  border: 5px solid #0934e2;
+  border: 5px solid #7c8ac4;
   border-radius: 50%;
   -webkit-transform: scale(1.1);
           transform: scale(1.1);
+}
+
+@media screen and (max-width: 1024px) {
+  .buttons .activated {
+    border: 3px solid #7c8ac4;
+  }
 }
 
 .main {
@@ -300,6 +338,15 @@ body {
   margin-bottom: 100px;
   -webkit-transition: all 0.3s linear;
   transition: all 0.3s linear;
+}
+
+@media screen and (max-width: 1024px) {
+  .main .page-container {
+    width: 210mm;
+    min-width: 210mm;
+    height: 149mm;
+    margin-top: 40px;
+  }
 }
 
 .main .page-container .page-left {
@@ -343,6 +390,12 @@ body {
   border-radius: 50%;
 }
 
+@media screen and (max-width: 1024px) {
+  .main .pagination-container span.current-page {
+    border: 3px solid #ffe08f;
+  }
+}
+
 .main .pagination-container button.prev-page::before {
   content: '<';
 }
@@ -369,6 +422,15 @@ body {
   transition: all 500ms ease-in-out;
 }
 
+@media screen and (max-width: 1024px) {
+  .dialog {
+    width: 35%;
+    height: 50%;
+    right: -35%;
+    top: 80px;
+  }
+}
+
 .dialog .dialog-top {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -380,12 +442,25 @@ body {
           align-items: baseline;
 }
 
+@media screen and (max-width: 1024px) {
+  .dialog .dialog-top {
+    margin: 8px 8px;
+    padding: 8px 8px;
+  }
+}
+
 .dialog .dialog-top .title {
   font-size: 30px;
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
   color: #ffffff;
+}
+
+@media screen and (max-width: 1024px) {
+  .dialog .dialog-top .title {
+    font-size: 20px;
+  }
 }
 
 .dialog .dialog-top .top-buttons {
@@ -411,6 +486,17 @@ body {
   margin-left: 0px;
   font-size: 25px;
   cursor: pointer;
+}
+
+@media screen and (max-width: 1024px) {
+  .dialog .dialog-top .top-buttons .btn-export,
+  .dialog .dialog-top .top-buttons .btn-close {
+    width: 33.33333px;
+    height: 33.33333px;
+    margin-top: 0px;
+    margin-left: 0px;
+    font-size: 16px;
+  }
 }
 
 .dialog .dialog-top .top-buttons .btn-export {
@@ -468,6 +554,17 @@ body {
   cursor: pointer;
 }
 
+@media screen and (max-width: 1024px) {
+  .dialog .container .dialog-fileloader .fileloader-buttons .btn-image,
+  .dialog .container .dialog-fileloader .fileloader-buttons .btn-removeAll {
+    width: 33.33333px;
+    height: 33.33333px;
+    margin-top: 0px;
+    margin-left: 0px;
+    font-size: 16px;
+  }
+}
+
 .dialog .container .dialog-fileloader .fileloader-buttons .btn-image {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -493,6 +590,15 @@ body {
   cursor: pointer;
 }
 
+@media screen and (max-width: 1024px) {
+  .dialog .container .dialog-fileloader .urlLists {
+    margin-top: 5.33333px;
+    border-radius: 3.33333px;
+    height: 200px;
+    font-size: 13.33333px;
+  }
+}
+
 .dialog .container .dialog-fileloader .list {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -502,6 +608,13 @@ body {
           justify-content: space-between;
   margin: 24px;
   padding: 12px;
+}
+
+@media screen and (max-width: 1024px) {
+  .dialog .container .dialog-fileloader .list {
+    margin: 16px;
+    padding: 8px;
+  }
 }
 
 .dialog .container .dialog-options {
@@ -519,6 +632,15 @@ body {
   color: #ffffff;
 }
 
+@media screen and (max-width: 1024px) {
+  .dialog .container .dialog-options {
+    gap: 21.33333px;
+    padding: 48px;
+    font-size: 15.38462px;
+    margin-top: 26.66667px;
+  }
+}
+
 .dialog .container .dialog-options .option-title {
   position: absolute;
   font-size: 33px;
@@ -530,6 +652,16 @@ body {
   background-color: #7a83c1;
   padding: 0 12px;
   font-weight: 600;
+}
+
+@media screen and (max-width: 1024px) {
+  .dialog .container .dialog-options .option-title {
+    font-size: 22px;
+    letter-spacing: 3px / 1.5;
+    top: -10px;
+    padding: 0 8px;
+    font-weight: 400;
+  }
 }
 
 .dialog .container .dialog-options .imgPerCnt {
@@ -565,6 +697,12 @@ body {
   text-align: center;
 }
 
+@media screen and (max-width: 1024px) {
+  .dialog .container .dialog-start {
+    margin-top: 16px;
+  }
+}
+
 .dialog .container .dialog-start .btn-play {
   width: 100px;
   height: 100px;
@@ -573,6 +711,21 @@ body {
   font-size: 50px;
   cursor: pointer;
   color: #ffffff;
+}
+
+@media screen and (max-width: 1024px) {
+  .dialog .container .dialog-start .btn-play {
+    width: 66.66667px;
+    height: 66.66667px;
+    margin-top: 0px;
+    margin-left: 0px;
+    font-size: 16px;
+  }
+}
+
+.dialog--active .dialog {
+  -webkit-transform: translateX(-100%);
+          transform: translateX(-100%);
 }
 
 .image-container {
@@ -628,12 +781,5 @@ body {
       grid-template-columns: repeat(2, 1fr);
   justify-items: center;
   overflow: hidden;
-}
-
-@media screen and (min-width: 1024px) {
-  .dialog--active .dialog {
-    -webkit-transform: translateX(-100%);
-            transform: translateX(-100%);
-  }
 }
 /*# sourceMappingURL=style.css.map */
