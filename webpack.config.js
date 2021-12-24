@@ -7,6 +7,7 @@ const MinifyWebpackPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const childProces = require('child_process');
 const TerserPlugin = require('terser-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode,
@@ -23,6 +24,7 @@ module.exports = {
     alias: {
       '@Custom': path.resolve(__dirname, './src/custom'),
       '@Common': path.resolve(__dirname, './src/common'),
+      '@images': path.resolve(__dirname, './src/images'),
     },
   },
   stats: 'errors-only',
@@ -46,6 +48,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new CopyWebpackPlugin({
+      patterns: [{ from: './src/images', to: './images' }],
+    }),
     new webpack.BannerPlugin({
       banner: `
       Build date: ${new Date().toLocaleString()}

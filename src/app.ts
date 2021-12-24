@@ -8,7 +8,7 @@
 //   // });
 // }
 import * as html2pdf from 'html2pdf.js';
-import '../style/css/style.css';
+import './style/css/style.css';
 import PageComponent from './components/page/page';
 import PageLeftComponent from './components/page/pageLeft';
 import PageRightComponent from './components/page/pageRight';
@@ -155,27 +155,27 @@ const DomRenderer = class extends Renderer {
     const pdfBtn = this.dialog.pdfBtn;
     pdfBtn.onclick = async () => {
       const element = document.querySelector('#element') as HTMLUListElement;
+      const loader = document.querySelector('.loader-container') as HTMLElement;
+
+      loader.style.visibility = 'visible';
       element.style.display = 'block';
       element.innerHTML = '';
-      for (let i = 0; i < totalPageCount; i++) {
-        const imgArr = [this.pageLeft.getChildren(), this.pageRight.getChildren()];
-        imgArr.forEach((item) => {
-          if (item) {
-            const cloneItem = item.cloneNode(true);
-            element.appendChild(cloneItem);
-            const divEl = element.appendChild(el('div'));
-            divEl.appendChild(cloneItem);
-          }
-        });
-        const nextBtn = document.querySelector('.next-page') as HTMLButtonElement;
-        nextBtn?.click();
-      }
 
-      await (async () => {
-        const lodding = document.querySelector('.loader') as HTMLElement;
-        lodding.style.display = 'block';
-      })();
-      await (async () => {
+      setTimeout(() => {
+        for (let i = 0; i < totalPageCount; i++) {
+          const imgArr = [this.pageLeft.getChildren(), this.pageRight.getChildren()];
+          imgArr.forEach((item) => {
+            if (item) {
+              const cloneItem = item.cloneNode(true);
+              element?.appendChild(cloneItem);
+              const divEl = element?.appendChild(el('div'));
+              divEl?.appendChild(cloneItem);
+            }
+          });
+          const nextBtn = document.querySelector('.next-page') as HTMLButtonElement;
+          nextBtn?.click();
+        }
+
         new html2pdf()
           .from(element)
           .set({
@@ -183,10 +183,12 @@ const DomRenderer = class extends Renderer {
             html2canvas: { scale: 2, logging: true, dpi: 200, letterRendering: true },
             jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
           })
-          .save();
-      })();
-      // lodding.style.display = 'none';
-      element.style.display = 'none';
+          .save()
+          .then(() => {
+            element.style.display = 'none';
+            loader.style.visibility = 'hidden';
+          });
+      }, 0);
     };
   }
 
