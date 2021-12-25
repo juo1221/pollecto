@@ -34,10 +34,12 @@ const PageComponent = class extends BaseComponent<HTMLElement> implements PageCo
     this.imgMap.clear();
   }
   zoomIn(): void {
-    this.el.style.transform = `scale(1.0)`;
+    this.el.style.transform = `scale(0.8)`;
+    this.el.style.zIndex = '1';
   }
   zoomOut(): void {
-    this.el.style.transform = `scale(0.7)`;
+    this.el.style.transform = `scale(0.6)`;
+    this.el.style.zIndex = '0';
   }
 };
 

@@ -6,20 +6,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --progress",
-    "build": "NODE_ENV=production webpack --progress",
-    "dev": "NODE_ENV=development webpack --progress"
+    "build": "NODE_ENV=production webpack --progress ",
+    "dev": "NODE_ENV=development webpack --progress",
+    "deploy": "NODE_ENV=production webpack --progress && gh-pages -d public -b master"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/juo1221/pollecto.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "kim juo yeong <hwgiwh271@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/juo1221/pollecto/issues"
   },
-  "homepage": "https://github.com/juo1221/pollecto#readme",
+  "homepage": "https://github.com/juo1221.github.io/pollecto/",
   "devDependencies": {
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",
