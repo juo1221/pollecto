@@ -29,6 +29,8 @@ export type SetAndAddImage = {
   image: Image;
 };
 export type MethodName = 'move' | 'size' | 'zoom';
+
+export type Listener = (e: MouseEvent) => void;
 export interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
   removeFrom(parent: HTMLElement): void;

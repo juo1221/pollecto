@@ -1,9 +1,9 @@
 import BaseComponent from '../base/base';
 import { err } from '@Custom/funtions';
-import { Image, MethodName } from '@Custom/types';
+import { Image, MethodName, Listener } from '@Custom/types';
 
 const ImageComponent = class extends BaseComponent<HTMLImageElement> implements Image {
-  private handlers: Map<MethodName, any[]> = new Map();
+  private handlers: Map<MethodName, Listener[]> = new Map();
   constructor(imgUrl: string) {
     super(`
         <div class="image-container">
@@ -29,7 +29,7 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
     }
   }
 
-  addOrRemoveLisener(state: boolean, listener: any) {
+  addOrRemoveLisener(state: boolean, listener: Listener) {
     if (!this.checkState(state)) {
       this.el.onmousedown = null;
       return;
@@ -42,7 +42,10 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
       this.handlers.set(methodName, [this.getListener(methodName)]);
     }
     const arr = this.handlers.get(methodName);
-    if (arr) this.addOrRemoveLisener(state, arr[arr.length - 1]);
+    if (arr) {
+      const listener = arr[arr.length - 1];
+      listener && this.addOrRemoveLisener(state, listener);
+    }
   }
   size(state: boolean) {
     const methodName = 'size';
@@ -50,10 +53,13 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
       this.handlers.set(methodName, [this.getListener(methodName)]);
     }
     const arr = this.handlers.get(methodName);
-    if (arr) this.addOrRemoveLisener(state, arr[arr.length - 1]);
+    if (arr) {
+      const listener = arr[arr.length - 1];
+      listener && this.addOrRemoveLisener(state, listener);
+    }
   }
 
-  private getListener(methodName: MethodName) {
+  private getListener(methodName: MethodName): Listener {
     return function addMouseEvent(e: MouseEvent): void {
       e.preventDefault();
       const target = e.target as HTMLImageElement;
