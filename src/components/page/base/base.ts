@@ -1,3 +1,5 @@
+import { Component } from '@Custom/types';
+
 import { el } from '@Custom/funtions';
 
 const BaseComponent = class<T extends HTMLElement> implements Component {

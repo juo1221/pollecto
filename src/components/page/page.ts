@@ -1,5 +1,6 @@
 import BaseComponent from './base/base';
 import { err } from '@Custom/funtions';
+import { Image, PageContainer, Component } from '@Custom/types';
 
 const PageComponent = class extends BaseComponent<HTMLElement> implements PageContainer {
   private imgMap: Map<number, Set<Image>> = new Map();

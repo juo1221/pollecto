@@ -1,8 +1,7 @@
 import BaseComponent from '../base/base';
 import { err, el } from '@Custom/funtions';
 import { LIMIT } from '@Common/constant';
-// import * as html2pdf from 'html2pdf.js';
-// const element = document.querySelector('#element');
+import { Dialog, Infos } from '@Custom/types';
 
 const DialogComponent = class extends BaseComponent<HTMLElement> implements Dialog {
   private urlArr: string[] = [];

@@ -1,42 +1,42 @@
-type Infos = {
+export type Infos = {
   readonly urlArr: string[];
   readonly imgPerPage: number;
 };
 
-type StateParams = {
+export type StateParams = {
   currentPage?: number;
   totalImg?: number;
   imgPerPage?: number;
 };
-type GetState = Required<StateParams>;
+export type GetState = Required<StateParams>;
 
-type BtnComponentState = {
+export type BtnComponentState = {
   isActivated: boolean;
 };
 
-type AddImage = {
+export type AddImage = {
   cnt: number;
   image: Image;
   imgPerPage: number;
 };
-type DialogConstructor = {
+export type DialogConstructor = {
   new (): Dialog & Component;
 };
-type SetAndAddImage = {
+export type SetAndAddImage = {
   cnt: number;
   imgPerPage: number;
   currentPage: number;
   image: Image;
 };
-type MethodName = 'move' | 'size' | 'zoom';
-interface Component {
+export type MethodName = 'move' | 'size' | 'zoom';
+export interface Component {
   attachTo(parent: HTMLElement, position?: InsertPosition): void;
   removeFrom(parent: HTMLElement): void;
 }
-interface Composable {
+export interface Composable {
   addChild(child: Component): void;
 }
-interface PageContainer extends Component, Composable {
+export interface PageContainer extends Component, Composable {
   setImg(currentPage: number, img: Image): void;
   getImg(currentPage: number): Set<Image>;
   getAllImg(): Image[][];
@@ -44,27 +44,27 @@ interface PageContainer extends Component, Composable {
   zoomIn(): void;
   zoomOut(): void;
 }
-interface SectionContainer extends Component, Composable {
+export interface SectionContainer extends Component, Composable {
   reset(): void;
   getChildren(): Element | null;
 }
-interface Dialog {
+export interface Dialog {
   get infos(): Infos;
   get renderBtn(): HTMLElement;
   add(): void;
   close(): void;
 }
-interface Pagination {
+export interface Pagination {
   new ({ totalImg, imgPerPage }: StateParams): Pagination;
   setState(newState: StateParams): void;
   getState(): GetState;
 }
-interface Button {
+export interface Button {
   toggleAndRemove(...btns: Button[]): void;
   reset(): void;
   get state(): BtnComponentState;
 }
-interface Image extends Component {
+export interface Image extends Component {
   addOrRemoveMovingClass(state: boolean): void;
   addOrRemoveSizingClass(state: boolean): void;
   move(state: boolean): void;

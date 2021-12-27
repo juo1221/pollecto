@@ -1,3 +1,5 @@
+import { Button, BtnComponentState } from '@Custom/types';
+
 const ButtonComponent = class implements Button {
   protected el: HTMLButtonElement;
   protected isActivated: boolean = false;

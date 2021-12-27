@@ -1,4 +1,5 @@
 import BaseComponent from './base/base';
+import { SectionContainer, Component } from '@Custom/types';
 
 const PageRightComponent = class extends BaseComponent<HTMLElement> implements SectionContainer {
   constructor() {

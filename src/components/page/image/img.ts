@@ -1,5 +1,7 @@
 import BaseComponent from '../base/base';
 import { err } from '@Custom/funtions';
+import { Image, MethodName } from '@Custom/types';
+
 const ImageComponent = class extends BaseComponent<HTMLImageElement> implements Image {
   private handlers: Map<MethodName, any[]> = new Map();
   constructor(imgUrl: string) {
@@ -39,14 +41,16 @@ const ImageComponent = class extends BaseComponent<HTMLImageElement> implements 
     if (!this.handlers.has(methodName)) {
       this.handlers.set(methodName, [this.getListener(methodName)]);
     }
-    this.addOrRemoveLisener(state, this.handlers.get(methodName)?.at(-1));
+    const arr = this.handlers.get(methodName);
+    if (arr) this.addOrRemoveLisener(state, arr[arr.length - 1]);
   }
   size(state: boolean) {
     const methodName = 'size';
     if (!this.handlers.has(methodName)) {
       this.handlers.set(methodName, [this.getListener(methodName)]);
     }
-    this.addOrRemoveLisener(state, this.handlers.get(methodName)?.at(-1));
+    const arr = this.handlers.get(methodName);
+    if (arr) this.addOrRemoveLisener(state, arr[arr.length - 1]);
   }
 
   private getListener(methodName: MethodName) {

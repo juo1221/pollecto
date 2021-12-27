@@ -20,6 +20,7 @@ import ImageComponent from './components/page/image/img';
 import Pagination from './components/pagination/pagination';
 import { PAGEDVIDED, LIMIT } from './common/constant';
 import { err, el } from './custom/funtions';
+import { PageContainer, SectionContainer, Button, SetAndAddImage } from '@Custom/types';
 
 const Renderer = class {
   constructor() {}
