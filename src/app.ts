@@ -155,6 +155,9 @@ const DomRenderer = class extends Renderer {
 
     const pdfBtn = this.dialog.pdfBtn;
     pdfBtn.onclick = async () => {
+      this.pagination.setState({ currentPage: 1 });
+      this.render();
+
       const element = document.querySelector('#element') as HTMLUListElement;
       const loader = document.querySelector('.loader-container') as HTMLElement;
 
@@ -176,7 +179,6 @@ const DomRenderer = class extends Renderer {
           const nextBtn = document.querySelector('.next-page') as HTMLButtonElement;
           nextBtn?.click();
         }
-
         new html2pdf()
           .from(element)
           .set({
@@ -232,12 +234,11 @@ const DomRenderer = class extends Renderer {
   }
   private setAndAddImage({ cnt, imgPerPage, currentPage, image }: SetAndAddImage) {
     if (cnt >= imgPerPage) {
-      this.page.setImg(currentPage, image);
       this.pageRight.addChild(image);
     } else {
-      this.page.setImg(currentPage, image);
       this.pageLeft.addChild(image);
     }
+    this.page.setImg(currentPage, image);
   }
   private startZoom() {
     this.main.classList.add('zooming');
