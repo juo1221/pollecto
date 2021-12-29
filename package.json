@@ -7,7 +7,7 @@
     "start": "webpack serve --progress",
     "build": "NODE_ENV=production webpack --progress",
     "dev": "NODE_ENV=development webpack --progress",
-    "deploy": "gh-pages -d dist",
+    "deploy": "gh-pages -d dist -b main",
     "predeploy": "npm run build",
     "check-types": "tsc"
   },
