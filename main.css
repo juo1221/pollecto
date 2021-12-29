@@ -1,7 +1,18 @@
+/*!
+ * 
+ *       Build date: 2021. 12. 29. 오후 5:17:09
+ *       Commit Version: 7a6803f
+ *
+ *       Author: juo
+ *
+ *       email: hwgiwh271@gmail.com
+ *
+ *
+ */
+@import url(https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap);
 /*
   1. Use a more-intuitive box-sizing model.
 */
-@import url("https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap");
 *,
 *::before,
 *::after {
@@ -681,7 +692,7 @@ body {
 }
 
 .image-container .image__thumbnail {
-  width: 100%;
+  width: 90%;
   position: relative;
   -webkit-transform: translate(0, 0);
           transform: translate(0, 0);
@@ -756,4 +767,3 @@ body {
           transform: translate(-50%, -50%);
   width: 250px;
 }
-/*# sourceMappingURL=style.css.map */
