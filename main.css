@@ -1,7 +1,7 @@
 /*!
  * 
- *       Build date: 2021. 12. 29. 오후 7:30:41
- *       Commit Version: 93663b5
+ *       Build date: 2021. 12. 30. 오후 3:41:55
+ *       Commit Version: 8a9b6c0
  *
  *       Author: juo
  *
@@ -203,12 +203,11 @@ video {
 body {
   background-color: #ffffff;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .header {
-  background-color: #d3d7e8;
-  height: 46px;
+  height: 80px;
   -webkit-box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
           box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
   display: -webkit-box;
@@ -217,23 +216,32 @@ body {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  text-align: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.header .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+}
+
+.header .container .header-title {
+  font-family: Rubik Mono One;
+  -webkit-transform: translateX(-5px);
+          transform: translateX(-5px);
 }
 
 @media screen and (max-width: 1024px) {
   .header {
     -webkit-box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
             box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
-    height: 40px;
+    height: 60px;
   }
-}
-
-.header-title {
-  margin-left: 6px;
-  font-family: Rubik Mono One;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 37px;
 }
 
 .buttons {
@@ -399,23 +407,20 @@ body {
   position: absolute;
   width: 480px;
   min-width: 480px;
-  height: 550px;
+  height: 850px;
   top: 50px;
   right: 0;
-  background-color: #7a83c1;
+  padding: 10px;
+  background-color: #ffffff;
   border-radius: 20px 0px 0px 20px;
+  border: 1px solid #002;
   -webkit-transition: all 500ms ease-in-out;
   transition: all 500ms ease-in-out;
 }
 
-@media screen and (min-width: 1024px) {
-  .dialog {
-    height: 90%;
-  }
-}
-
 @media screen and (max-width: 1024px) {
   .dialog {
+    height: 600px;
     width: 350px;
     min-width: 350px;
     top: 45px;
@@ -445,7 +450,7 @@ body {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  color: #ffffff;
+  color: #002;
 }
 
 @media screen and (max-width: 1024px) {
@@ -481,12 +486,12 @@ body {
 
 .dialog .dialog-top .top-buttons .btn-export {
   color: #e97070;
-  background: #ffffff;
+  border: 1px solid #002;
   border-radius: 50%;
 }
 
 .dialog .dialog-top .top-buttons .btn-close {
-  background: #dfe1fb;
+  border: 1px solid #002;
   border-radius: 50%;
 }
 
@@ -520,8 +525,8 @@ body {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  background-color: #dfe1fb;
   border-radius: 5px;
+  border: 1px solid #002;
 }
 
 .dialog .container .dialog-fileloader .fileloader-buttons .btn-image,
@@ -553,6 +558,7 @@ body {
   border-radius: 5px;
   height: 400px;
   font-size: 13.33333px;
+  border: 1px solid black;
 }
 
 .dialog .container .dialog-fileloader .urlLists .btn-remove {
@@ -594,11 +600,11 @@ body {
       grid-template-columns: 1fr 1fr;
   gap: 16px;
   padding: 48px;
-  border: 1px solid #ffffff;
+  border: 1px solid #002;
   border-radius: 5px;
   margin-top: 20px;
   font-size: 15.38462px;
-  color: #ffffff;
+  color: #002;
 }
 
 @media screen and (max-width: 1024px) {
@@ -618,7 +624,7 @@ body {
   top: -10px;
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
-  background-color: #7a83c1;
+  background-color: #ffffff;
   padding: 0 6px;
   font-weight: 600;
 }
@@ -637,7 +643,7 @@ body {
   text-align: center;
   border: none;
   border-radius: 5px;
-  background-color: #ffffff;
+  border: 1px solid #002;
 }
 
 .dialog .container .dialog-options .sort-btns,
@@ -648,7 +654,7 @@ body {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  color: white;
+  color: #002;
 }
 
 .dialog .container .dialog-options .sort-btns .btn,
@@ -679,7 +685,7 @@ body {
   margin-left: 0px;
   font-size: 35px;
   cursor: pointer;
-  color: #ffffff;
+  color: #002;
 }
 
 .dialog--active .dialog {
