@@ -4,7 +4,7 @@
 $color-header: #d3d7e8;
 $color-main: rgb(255, 255, 255);
 $color-icon: #ffe08f;
-$color-dialog: #7a83c1;
+$color-dialog: #ffffff;
 $color-fileLoader: #dfe1fb;
 $color-white: #ffffff;
 $color-black: #002;
@@ -52,26 +52,26 @@ $animation-duration: 300ms;
 body {
   background-color: $color-white;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 .header {
   @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
-  background-color: $color-header;
-  height: $height-space * 11.5;
+  height: $height-space * 20;
   box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
-  text-align: center;
+  justify-content: center;
+  .container {
+    display: flex;
+    align-items: baseline;
+    .header-title {
+      font-family: Rubik Mono One;
+      transform: translateX(-5px);
+    }
+  }
   @media screen and (max-width: 1024px) {
     box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
-    height: $height-space * 10;
-  }
-  &-title {
-    margin-left: $width-space;
-    font-family: Rubik Mono One;
-    font-weight: $weight-regular;
-    font-size: $font-title;
-    line-height: 37px;
+    height: $height-space * 15;
   }
 }
 .buttons {
@@ -182,16 +182,17 @@ body {
   position: absolute;
   width: $width-space * 80;
   min-width: $width-space * 80;
-  height: 550px;
+  height: 850px;
   top: 50px;
   right: 0;
+  padding: 10px;
   background-color: $color-dialog;
   border-radius: 20px 0px 0px 20px;
+  border: 1px solid $color-black;
   transition: all 500ms ease-in-out;
-  @media screen and (min-width: 1024px) {
-    height: 90%;
-  }
+
   @media screen and (max-width: 1024px) {
+    height: 600px;
     width: 350px;
     min-width: 350px;
     top: 45px;
@@ -208,7 +209,7 @@ body {
     .title {
       font-size: $font-title;
       flex-grow: 1;
-      color: $color-white;
+      color: $color-black;
       @media screen and (max-width: 1024px) {
         font-size: $font-title / 1.5;
       }
@@ -224,11 +225,11 @@ body {
       }
       .btn-export {
         color: rgb(233, 112, 112);
-        background: $color-white;
+        border: 1px solid $color-black;
         border-radius: $border-half;
       }
       .btn-close {
-        background: $color-fileLoader;
+        border: 1px solid $color-black;
         border-radius: $border-half;
       }
     }
@@ -248,8 +249,8 @@ body {
       .fileloader-buttons {
         display: flex;
         justify-content: space-between;
-        background-color: $color-fileLoader;
         border-radius: $border-radius;
+        border: 1px solid $color-black;
         .btn-image,
         .btn-removeAll {
           @include customBtn(1, 1, 0, 0, 2);
@@ -267,6 +268,7 @@ body {
         border-radius: $border-radius;
         height: 400px;
         font-size: $font-title / 1.5;
+        border: 1px solid black;
         .btn-remove {
           cursor: pointer;
         }
@@ -294,11 +296,11 @@ body {
       grid-template-columns: 1fr 1fr;
       gap: $height-space * 4;
       padding: $width-space * 8;
-      border: 1px solid $color-white;
+      border: 1px solid $color-black;
       border-radius: $border-radius;
       margin-top: $height-space * 5;
       font-size: $font-title/1.3;
-      color: $color-white;
+      color: $color-black;
       @media screen and (max-width: 1024px) {
         gap: $height-space * 4 / 1.5;
         padding: $width-space * 8 / 2;
@@ -327,14 +329,14 @@ body {
         text-align: center;
         border: none;
         border-radius: $border-radius;
-        background-color: $color-white;
+        border: 1px solid $color-black;
       }
 
       .sort-btns,
       .line-btns {
         display: flex;
         justify-content: space-between;
-        color: white;
+        color: $color-black;
         .btn {
           cursor: pointer;
         }
@@ -351,7 +353,7 @@ body {
       }
       .btn-play {
         @include customBtn(2, 2, 0, 0, 1);
-        color: $color-white;
+        color: $color-black;
       }
     }
   }
